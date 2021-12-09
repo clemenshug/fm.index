@@ -4,17 +4,35 @@
 #' Construct FM Index
 #'
 #' @param strings Vector of strings to construct FM index from
+#' @param case_sensitive Build case-sensitive index if TRUE
 #' @export
-construct_fm_index <- function(strings, case_sensitive = FALSE) {
-    .Call(`_fm_index_construct_fm_index`, strings, case_sensitive)
+fm_index_construct <- function(strings, case_sensitive = FALSE) {
+    .Call(`_fm_index_fm_index_construct`, strings, case_sensitive)
 }
 
 #' Find query in FM Index
 #'
 #' @param query Strings to find in FM index
-#' @param index Pointer to index created with [construct_fm_index()]
+#' @param index Pointer to index created with [fm_index_construct()]
 #' @export
 fm_index_find <- function(query, index) {
     .Call(`_fm_index_fm_index_find`, query, index)
+}
+
+#' Save FM Index
+#'
+#' @param index Pointer to index created with [construct_fm_index()]
+#' @param path Path to save index to
+#' @export
+fm_index_save <- function(index, path) {
+    invisible(.Call(`_fm_index_fm_index_save`, index, path))
+}
+
+#' Load FM Index
+#'
+#' @param path Path to load index from
+#' @export
+fm_index_load <- function(path) {
+    .Call(`_fm_index_fm_index_load`, path)
 }
 

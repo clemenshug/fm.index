@@ -1,5 +1,5 @@
 test_that("finding queries works", {
-  index <- construct_fm_index(c("asdf", "dbd"))
+  index <- fm_index_construct(c("asdf", "dbd"))
   hits <- fm_index_find(c("a", "b", "d"), index)
   hits <- hits[
     order(hits$pattern_index, hits$library_index, hits$position),

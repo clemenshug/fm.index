@@ -1,8 +1,14 @@
-#include <Rcpp.h>
 #include <string>
 #include <vector>
+#include <fstream>
 
 #include <sdsl/suffix_arrays.hpp>
+#include <sdsl/cereal.hpp>
+
+// Realloc is defined in both the cereal dependency rapidjson and in core R
+// Have to include Rcpp after sdsl / cereal
+#include <Rcpp.h>
+
 #include <stringi.h>
 
 using namespace Rcpp;
@@ -11,9 +17,16 @@ using tree_t = sdsl::csa_wt<>;
 
 class FMIndex {
 public:
+  FMIndex() {};
   FMIndex(tree_t index, std::vector<int> boundaries) : index(index), boundaries(boundaries) {};
   FMIndex(CharacterVector text);
   DataFrame find(CharacterVector patterns);
+  template<class Archive>
+  void serialize(Archive& archive) {
+    archive(index, boundaries);
+  };
+  void load_file(String path);
+  void save_file(String path);
 private:
   tree_t index;
   std::vector<int> boundaries;
@@ -76,12 +89,25 @@ DataFrame FMIndex::find(CharacterVector patterns) {
   );
 }
 
+void FMIndex::load_file(String path) {
+  std::ifstream in_file(path, std::ios::binary);
+  cereal::BinaryInputArchive archive(in_file);
+  archive(*this);
+}
+
+void FMIndex::save_file(String path) {
+  std::ofstream out_file(path, std::ios::binary);
+  cereal::BinaryOutputArchive archive(out_file);
+  archive(*this);
+}
+
 //' Construct FM Index
 //'
 //' @param strings Vector of strings to construct FM index from
+//' @param case_sensitive Build case-sensitive index if TRUE
 //' @export
 // [[Rcpp::export]]
-SEXP construct_fm_index(CharacterVector strings, bool case_sensitive = false) {
+SEXP fm_index_construct(CharacterVector strings, bool case_sensitive = false) {
   if (!case_sensitive)
     strings = stri_trans_tolower(strings);
   auto* fm_index = new FMIndex(strings);
@@ -92,10 +118,33 @@ SEXP construct_fm_index(CharacterVector strings, bool case_sensitive = false) {
 //' Find query in FM Index
 //'
 //' @param query Strings to find in FM index
-//' @param index Pointer to index created with [construct_fm_index()]
+//' @param index Pointer to index created with [fm_index_construct()]
 //' @export
 // [[Rcpp::export]]
 DataFrame fm_index_find(CharacterVector query, SEXP index) {
   Rcpp::XPtr<FMIndex> index_ptr(index);
   return index_ptr->find(query);
+}
+
+//' Save FM Index
+//'
+//' @param index Pointer to index created with [construct_fm_index()]
+//' @param path Path to save index to
+//' @export
+// [[Rcpp::export]]
+void fm_index_save(SEXP index, String path) {
+  Rcpp::XPtr<FMIndex> index_ptr(index);
+  index_ptr->save_file(path);
+}
+
+//' Load FM Index
+//'
+//' @param path Path to load index from
+//' @export
+// [[Rcpp::export]]
+SEXP fm_index_load(String path) {
+  auto* fm_index = new FMIndex();
+  fm_index->load_file(path);
+  XPtr<FMIndex> ptr(fm_index);
+  return ptr;
 }
