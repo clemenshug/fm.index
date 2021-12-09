@@ -5,8 +5,8 @@
 #'
 #' @param strings Vector of strings to construct FM index from
 #' @export
-construct_fm_index <- function(strings) {
-    .Call(`_fm_index_construct_fm_index`, strings)
+construct_fm_index <- function(strings, case_sensitive = FALSE) {
+    .Call(`_fm_index_construct_fm_index`, strings, case_sensitive)
 }
 
 #' Find query in FM Index

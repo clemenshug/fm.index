@@ -6,13 +6,14 @@
 using namespace Rcpp;
 
 // construct_fm_index
-SEXP construct_fm_index(CharacterVector strings);
-RcppExport SEXP _fm_index_construct_fm_index(SEXP stringsSEXP) {
+SEXP construct_fm_index(CharacterVector strings, bool case_sensitive);
+RcppExport SEXP _fm_index_construct_fm_index(SEXP stringsSEXP, SEXP case_sensitiveSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< CharacterVector >::type strings(stringsSEXP);
-    rcpp_result_gen = Rcpp::wrap(construct_fm_index(strings));
+    Rcpp::traits::input_parameter< bool >::type case_sensitive(case_sensitiveSEXP);
+    rcpp_result_gen = Rcpp::wrap(construct_fm_index(strings, case_sensitive));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -30,7 +31,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_fm_index_construct_fm_index", (DL_FUNC) &_fm_index_construct_fm_index, 1},
+    {"_fm_index_construct_fm_index", (DL_FUNC) &_fm_index_construct_fm_index, 2},
     {"_fm_index_fm_index_find", (DL_FUNC) &_fm_index_fm_index_find, 2},
     {NULL, NULL, 0}
 };

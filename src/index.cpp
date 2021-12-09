@@ -3,10 +3,11 @@
 #include <vector>
 
 #include <sdsl/suffix_arrays.hpp>
-
-#include "utils.hpp"
+#include <stringi.h>
 
 using namespace Rcpp;
+
+using tree_t = sdsl::csa_wt<>;
 
 class FMIndex {
 public:
@@ -80,7 +81,9 @@ DataFrame FMIndex::find(CharacterVector patterns) {
 //' @param strings Vector of strings to construct FM index from
 //' @export
 // [[Rcpp::export]]
-SEXP construct_fm_index(CharacterVector strings) {
+SEXP construct_fm_index(CharacterVector strings, bool case_sensitive = false) {
+  if (!case_sensitive)
+    strings = stri_trans_tolower(strings);
   auto* fm_index = new FMIndex(strings);
   XPtr<FMIndex> ptr(fm_index);
   return ptr;
