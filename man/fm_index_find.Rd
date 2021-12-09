@@ -9,7 +9,7 @@ fm_index_find(query, index)
 \arguments{
 \item{query}{Strings to find in FM index}
 
-\item{index}{Pointer to index created with \code{construct_fm_index()}}
+\item{index}{Pointer to index created with \code{\link[=construct_fm_index]{construct_fm_index()}}}
 }
 \description{
 Find query in FM Index

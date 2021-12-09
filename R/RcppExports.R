@@ -12,7 +12,7 @@ construct_fm_index <- function(strings) {
 #' Find query in FM Index
 #'
 #' @param query Strings to find in FM index
-#' @param index Pointer to index created with `construct_fm_index()`
+#' @param index Pointer to index created with [construct_fm_index()]
 #' @export
 fm_index_find <- function(query, index) {
     .Call(`_fm_index_fm_index_find`, query, index)

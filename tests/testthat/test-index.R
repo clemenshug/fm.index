@@ -8,9 +8,9 @@ test_that("finding queries works", {
   expect_equal(
     hits,
     data.frame(
-      pattern_index = c(0, 1, 2, 2, 2),
-      library_index = c(0, 1, 0, 1, 1),
-      position = c(0, 1, 2, 0, 2)
+      pattern_index = c(1, 2, 3, 3, 3),
+      library_index = c(1, 2, 1, 2, 2),
+      position = c(1, 2, 3, 1, 3)
     )
   )
 })

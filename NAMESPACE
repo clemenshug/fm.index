@@ -2,5 +2,4 @@
 
 export(construct_fm_index)
 export(fm_index_find)
-importFrom(Rcpp,sourceCpp)
 useDynLib(fm.index, .registration = TRUE)
