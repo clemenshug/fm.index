@@ -27,7 +27,6 @@ public:
   };
   void load_file(String path);
   void save_file(String path);
-private:
   tree_t index;
   std::vector<int> boundaries;
 };
@@ -101,18 +100,34 @@ void FMIndex::save_file(String path) {
   archive(*this);
 }
 
+List wrap_index(FMIndex* index) {
+  XPtr<FMIndex> index_ptr(index);
+  auto wrapped = List::create(
+    Named("index") = index_ptr,
+    Named("n") = index->boundaries.size(),
+    Named("n_bytes") = index->index.size()
+  );
+  wrapped.attr("class") = "fmindex";
+  return wrapped;
+}
+
+FMIndex* unwrap_index(List index) {
+  if (as<std::string>(index.attr("class")) != "fmindex")
+    stop("Not an FMIndex");
+  return (FMIndex*) R_ExternalPtrAddr(index["index"]);
+}
+
 //' Construct FM Index
 //'
 //' @param strings Vector of strings to construct FM index from
 //' @param case_sensitive Build case-sensitive index if TRUE
 //' @export
 // [[Rcpp::export]]
-SEXP fm_index_construct(CharacterVector strings, bool case_sensitive = false) {
+List fm_index_construct(CharacterVector strings, bool case_sensitive = false) {
   if (!case_sensitive)
     strings = stri_trans_tolower(strings);
   auto* fm_index = new FMIndex(strings);
-  XPtr<FMIndex> ptr(fm_index);
-  return ptr;
+  return wrap_index(fm_index);
 }
 
 //' Find query in FM Index
@@ -121,20 +136,18 @@ SEXP fm_index_construct(CharacterVector strings, bool case_sensitive = false) {
 //' @param index Pointer to index created with [fm_index_construct()]
 //' @export
 // [[Rcpp::export]]
-DataFrame fm_index_find(CharacterVector query, SEXP index) {
-  Rcpp::XPtr<FMIndex> index_ptr(index);
-  return index_ptr->find(query);
+DataFrame fm_index_find(CharacterVector query, List index) {
+  return unwrap_index(index)->find(query);
 }
 
 //' Save FM Index
 //'
-//' @param index Pointer to index created with [construct_fm_index()]
+//' @param index Pointer to index created with [fm_index_construct()]
 //' @param path Path to save index to
 //' @export
 // [[Rcpp::export]]
-void fm_index_save(SEXP index, String path) {
-  Rcpp::XPtr<FMIndex> index_ptr(index);
-  index_ptr->save_file(path);
+void fm_index_save(List index, String path) {
+  unwrap_index(index)->save_file(path);
 }
 
 //' Load FM Index
@@ -142,9 +155,8 @@ void fm_index_save(SEXP index, String path) {
 //' @param path Path to load index from
 //' @export
 // [[Rcpp::export]]
-SEXP fm_index_load(String path) {
+List fm_index_load(String path) {
   auto* fm_index = new FMIndex();
   fm_index->load_file(path);
-  XPtr<FMIndex> ptr(fm_index);
-  return ptr;
+  return wrap_index(fm_index);
 }

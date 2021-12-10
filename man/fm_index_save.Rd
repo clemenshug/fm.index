@@ -7,7 +7,7 @@
 fm_index_save(index, path)
 }
 \arguments{
-\item{index}{Pointer to index created with \code{\link[=construct_fm_index]{construct_fm_index()}}}
+\item{index}{Pointer to index created with \code{\link[=fm_index_construct]{fm_index_construct()}}}
 
 \item{path}{Path to save index to}
 }

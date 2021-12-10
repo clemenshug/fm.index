@@ -21,7 +21,7 @@ fm_index_find <- function(query, index) {
 
 #' Save FM Index
 #'
-#' @param index Pointer to index created with [construct_fm_index()]
+#' @param index Pointer to index created with [fm_index_construct()]
 #' @param path Path to save index to
 #' @export
 fm_index_save <- function(index, path) {

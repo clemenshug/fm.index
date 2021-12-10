@@ -6,7 +6,7 @@
 using namespace Rcpp;
 
 // fm_index_construct
-SEXP fm_index_construct(CharacterVector strings, bool case_sensitive);
+List fm_index_construct(CharacterVector strings, bool case_sensitive);
 RcppExport SEXP _fm_index_fm_index_construct(SEXP stringsSEXP, SEXP case_sensitiveSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -18,30 +18,30 @@ BEGIN_RCPP
 END_RCPP
 }
 // fm_index_find
-DataFrame fm_index_find(CharacterVector query, SEXP index);
+DataFrame fm_index_find(CharacterVector query, List index);
 RcppExport SEXP _fm_index_fm_index_find(SEXP querySEXP, SEXP indexSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< CharacterVector >::type query(querySEXP);
-    Rcpp::traits::input_parameter< SEXP >::type index(indexSEXP);
+    Rcpp::traits::input_parameter< List >::type index(indexSEXP);
     rcpp_result_gen = Rcpp::wrap(fm_index_find(query, index));
     return rcpp_result_gen;
 END_RCPP
 }
 // fm_index_save
-void fm_index_save(SEXP index, String path);
+void fm_index_save(List index, String path);
 RcppExport SEXP _fm_index_fm_index_save(SEXP indexSEXP, SEXP pathSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< SEXP >::type index(indexSEXP);
+    Rcpp::traits::input_parameter< List >::type index(indexSEXP);
     Rcpp::traits::input_parameter< String >::type path(pathSEXP);
     fm_index_save(index, path);
     return R_NilValue;
 END_RCPP
 }
 // fm_index_load
-SEXP fm_index_load(String path);
+List fm_index_load(String path);
 RcppExport SEXP _fm_index_fm_index_load(SEXP pathSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
