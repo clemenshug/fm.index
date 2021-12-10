@@ -119,28 +119,37 @@ FMIndex* unwrap_index(const List& index) {
   return index_ptr;
 }
 
-//' FM Index functions
+//' Construct new FM Index
 //'
 //' FM indices are data structures for memory efficient storage of large
 //' sets of strings. Searches for partial matches of query strings within the
 //' set of strings in the index are extremely fast.
 //'
-//' \itemize{
-//' \item \code{fm_index_construct} Construct new FM Index
-//' \item \code{fm_index_find} Find given queries in FM Index
-//' \item \code{fm_index_save} Save FM Index to disk
-//' \item \code{fm_index_load} Load FM Index from disk
-//' }
-//'
 //' @param strings Vector of strings to construct FM index from
-//' @param query Vector of strings to find in FM index
 //' @param case_sensitive Build case-sensitive index if TRUE
-//' @param index Index created with [fm_index_construct()]
-//' @param path Path where to load index from or save index to
+//'
 //' @examples
-//'
 //' data("state")
+//' index <- fm_index_construct(state.name, case_sensitive = FALSE)
 //'
+//' @family FM Index functions
+//' @export
+//' @importFrom stringi stri_trans_tolower
+// [[Rcpp::export]]
+List fm_index_construct(CharacterVector strings, bool case_sensitive = false) {
+  if (!case_sensitive)
+    strings = stri_trans_tolower(strings);
+  auto* fm_index = new FMIndex(strings);
+  return wrap_index(fm_index);
+}
+
+//' Find given queries in FM Index
+//'
+//' @param queries Vector of strings to find in FM index
+//' @param index Index created with [fm_index_construct()]
+//'
+//' @examples
+//' data("state")
 //' index <- fm_index_construct(state.name, case_sensitive = FALSE)
 //' # Find all states with "new" in their names
 //' hits <- fm_index_find("new", index)
@@ -152,41 +161,43 @@ FMIndex* unwrap_index(const List& index) {
 //' hits
 //' state.name[hits$library_index]
 //'
+//' @family FM Index functions
+//' @export
+// [[Rcpp::export]]
+DataFrame fm_index_find(const CharacterVector& queries, const List& index) {
+  return unwrap_index(index)->find(queries);
+}
+
+//' Save / load FM indices
+//'
+//' FM indices can be stored on disk and loaded into memory again in order
+//' to avoid re-computing the index every time a new R session is opened.
+//'
+//' @param index FM Index to be saved to disk
+//' @param path Path where to save index to or load index from
+//'
+//' @examples
+//' data("state")
+//' index_1 <- fm_index_construct(state.name, case_sensitive = FALSE)
+//'
 //' tmp_path <- tempfile()
-//' fm_index_save(index, tmp_path)
+//' fm_index_save(index_1, tmp_path)
 //' index_2 <- fm_index_load(tmp_path)
 //'
 //' identical(
-//'   fm_index_find("new", index),
+//'   fm_index_find("new", index_1),
 //'   fm_index_find("new", index_2)
 //' )
 //'
-//' @rdname fmindex
-//' @export
-//' @importFrom stringi stri_trans_tolower
-// [[Rcpp::export]]
-List fm_index_construct(CharacterVector strings, bool case_sensitive = false) {
-  if (!case_sensitive)
-    strings = stri_trans_tolower(strings);
-  auto* fm_index = new FMIndex(strings);
-  return wrap_index(fm_index);
-}
-
-//' @rdname fmindex
-//' @export
-// [[Rcpp::export]]
-DataFrame fm_index_find(const CharacterVector& query, const List& index) {
-  return unwrap_index(index)->find(query);
-}
-
-//' @rdname fmindex
+//' @describeIn fm_index_save Save FM Index to disk
+//' @family FM Index functions
 //' @export
 // [[Rcpp::export]]
 void fm_index_save(const List& index, const String& path) {
   unwrap_index(index)->save_file(path);
 }
 
-//' @rdname fmindex
+//' @describeIn fm_index_save Load FM Index from disk
 //' @export
 // [[Rcpp::export]]
 List fm_index_load(const String& path) {

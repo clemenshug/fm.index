@@ -23,14 +23,14 @@ BEGIN_RCPP
 END_RCPP
 }
 // fm_index_find
-DataFrame fm_index_find(const CharacterVector& query, const List& index);
-RcppExport SEXP _fm_index_fm_index_find(SEXP querySEXP, SEXP indexSEXP) {
+DataFrame fm_index_find(const CharacterVector& queries, const List& index);
+RcppExport SEXP _fm_index_fm_index_find(SEXP queriesSEXP, SEXP indexSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const CharacterVector& >::type query(querySEXP);
+    Rcpp::traits::input_parameter< const CharacterVector& >::type queries(queriesSEXP);
     Rcpp::traits::input_parameter< const List& >::type index(indexSEXP);
-    rcpp_result_gen = Rcpp::wrap(fm_index_find(query, index));
+    rcpp_result_gen = Rcpp::wrap(fm_index_find(queries, index));
     return rcpp_result_gen;
 END_RCPP
 }
