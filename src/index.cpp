@@ -19,56 +19,55 @@ class FMIndex {
 public:
   FMIndex() {};
   FMIndex(tree_t index, std::vector<int> boundaries) : index(index), boundaries(boundaries) {};
-  FMIndex(CharacterVector text);
-  DataFrame find(CharacterVector patterns);
+  FMIndex(const CharacterVector& text);
+  DataFrame find(const CharacterVector& patterns);
   template<class Archive>
   void serialize(Archive& archive) {
     archive(index, boundaries);
   };
-  void load_file(String path);
-  void save_file(String path);
+  void load_file(const String& path);
+  void save_file(const String& path);
   tree_t index;
   std::vector<int> boundaries;
 };
 
-FMIndex::FMIndex(CharacterVector text) {
+FMIndex::FMIndex(const CharacterVector& text) {
   boundaries.reserve(text.size());
   int string_length = 0;
-  for (auto& x: text) {
+  for (const auto& x: text) {
     string_length += x.size();
     boundaries.push_back(string_length);
   }
   std::string text_concat;
   text_concat.reserve(string_length);
-  for (auto& x: text) {
+  for (const auto& x: text) {
     text_concat.append(x);
   }
   sdsl::construct_im(index, text_concat, 1);
 }
 
-DataFrame FMIndex::find(CharacterVector patterns) {
+DataFrame FMIndex::find(const CharacterVector& patterns) {
   std::vector< std::vector<int> > all_locations;
-  for (auto& pattern: patterns) {
-    auto locations_ = locate(index, pattern.begin(), pattern.end());
-    auto n = locations_.size();
+  int n_total = 0;
+  for (const auto& pattern: patterns) {
+    const auto locations_ = locate(index, pattern.begin(), pattern.end());
+    const auto n = locations_.size();
+    n_total += n;
     std::vector<int> locations;
     locations.reserve(n);
-    for (auto& x: locations_) {
+    for (const auto& x: locations_) {
       locations.push_back(x);
     }
     all_locations.push_back(locations);
   }
-  int n_total = 0;
-  for (auto& locations: all_locations)
-    n_total += locations.size();
   IntegerVector pattern_indices(n_total);
   IntegerVector library_indices(n_total);
   IntegerVector positions(n_total);
   int i_total = 0;
   for (int pattern_idx = 0; pattern_idx < patterns.size(); pattern_idx++) {
-    auto locations = all_locations[pattern_idx];
-    for (auto& location: locations) {
-      auto library_index = std::distance(
+    const auto locations = all_locations[pattern_idx];
+    for (const auto& location: locations) {
+      const auto library_index = std::distance(
         boundaries.begin(),
         std::upper_bound(boundaries.begin(), boundaries.end(), location)
       );
@@ -88,13 +87,13 @@ DataFrame FMIndex::find(CharacterVector patterns) {
   );
 }
 
-void FMIndex::load_file(String path) {
+void FMIndex::load_file(const String& path) {
   std::ifstream in_file(path, std::ios::binary);
   cereal::BinaryInputArchive archive(in_file);
   archive(*this);
 }
 
-void FMIndex::save_file(String path) {
+void FMIndex::save_file(const String& path) {
   std::ofstream out_file(path, std::ios::binary);
   cereal::BinaryOutputArchive archive(out_file);
   archive(*this);
@@ -111,17 +110,60 @@ List wrap_index(FMIndex* index) {
   return wrapped;
 }
 
-FMIndex* unwrap_index(List index) {
+FMIndex* unwrap_index(const List& index) {
   if (as<std::string>(index.attr("class")) != "fmindex")
     stop("Not an FMIndex");
-  return (FMIndex*) R_ExternalPtrAddr(index["index"]);
+  auto* index_ptr = (FMIndex*) R_ExternalPtrAddr(index["index"]);
+  if (index_ptr == NULL)
+    stop("Index invalid");
+  return index_ptr;
 }
 
-//' Construct FM Index
+//' FM Index functions
+//'
+//' FM indices are data structures for memory efficient storage of large
+//' sets of strings. Searches for partial matches of query strings within the
+//' set of strings in the index are extremely fast.
+//'
+//' \itemize{
+//' \item \code{fm_index_construct} Construct new FM Index
+//' \item \code{fm_index_find} Find given queries in FM Index
+//' \item \code{fm_index_save} Save FM Index to disk
+//' \item \code{fm_index_load} Load FM Index from disk
+//' }
 //'
 //' @param strings Vector of strings to construct FM index from
+//' @param query Vector of strings to find in FM index
 //' @param case_sensitive Build case-sensitive index if TRUE
+//' @param index Index created with [fm_index_construct()]
+//' @param path Path where to load index from or save index to
+//' @examples
+//'
+//' data("state")
+//'
+//' index <- fm_index_construct(state.name, case_sensitive = FALSE)
+//' # Find all states with "new" in their names
+//' hits <- fm_index_find("new", index)
+//' hits
+//' # Show matching strings in library
+//' state.name[hits$library_index]
+//'
+//' hits <- fm_index_find("ar", index)
+//' hits
+//' state.name[hits$library_index]
+//'
+//' tmp_path <- tempfile()
+//' fm_index_save(index, tmp_path)
+//' index_2 <- fm_index_load(tmp_path)
+//'
+//' identical(
+//'   fm_index_find("new", index),
+//'   fm_index_find("new", index_2)
+//' )
+//'
+//' @rdname fmindex
 //' @export
+//' @importFrom stringi stri_trans_tolower
 // [[Rcpp::export]]
 List fm_index_construct(CharacterVector strings, bool case_sensitive = false) {
   if (!case_sensitive)
@@ -130,32 +172,24 @@ List fm_index_construct(CharacterVector strings, bool case_sensitive = false) {
   return wrap_index(fm_index);
 }
 
-//' Find query in FM Index
-//'
-//' @param query Strings to find in FM index
-//' @param index Pointer to index created with [fm_index_construct()]
+//' @rdname fmindex
 //' @export
 // [[Rcpp::export]]
-DataFrame fm_index_find(CharacterVector query, List index) {
+DataFrame fm_index_find(const CharacterVector& query, const List& index) {
   return unwrap_index(index)->find(query);
 }
 
-//' Save FM Index
-//'
-//' @param index Pointer to index created with [fm_index_construct()]
-//' @param path Path to save index to
+//' @rdname fmindex
 //' @export
 // [[Rcpp::export]]
-void fm_index_save(List index, String path) {
+void fm_index_save(const List& index, const String& path) {
   unwrap_index(index)->save_file(path);
 }
 
-//' Load FM Index
-//'
-//' @param path Path to load index from
+//' @rdname fmindex
 //' @export
 // [[Rcpp::export]]
-List fm_index_load(String path) {
+List fm_index_load(const String& path) {
   auto* fm_index = new FMIndex();
   fm_index->load_file(path);
   return wrap_index(fm_index);

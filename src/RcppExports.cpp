@@ -5,6 +5,11 @@
 
 using namespace Rcpp;
 
+#ifdef RCPP_USE_GLOBAL_ROSTREAM
+Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
+Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
+#endif
+
 // fm_index_construct
 List fm_index_construct(CharacterVector strings, bool case_sensitive);
 RcppExport SEXP _fm_index_fm_index_construct(SEXP stringsSEXP, SEXP case_sensitiveSEXP) {
@@ -18,35 +23,35 @@ BEGIN_RCPP
 END_RCPP
 }
 // fm_index_find
-DataFrame fm_index_find(CharacterVector query, List index);
+DataFrame fm_index_find(const CharacterVector& query, const List& index);
 RcppExport SEXP _fm_index_fm_index_find(SEXP querySEXP, SEXP indexSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< CharacterVector >::type query(querySEXP);
-    Rcpp::traits::input_parameter< List >::type index(indexSEXP);
+    Rcpp::traits::input_parameter< const CharacterVector& >::type query(querySEXP);
+    Rcpp::traits::input_parameter< const List& >::type index(indexSEXP);
     rcpp_result_gen = Rcpp::wrap(fm_index_find(query, index));
     return rcpp_result_gen;
 END_RCPP
 }
 // fm_index_save
-void fm_index_save(List index, String path);
+void fm_index_save(const List& index, const String& path);
 RcppExport SEXP _fm_index_fm_index_save(SEXP indexSEXP, SEXP pathSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type index(indexSEXP);
-    Rcpp::traits::input_parameter< String >::type path(pathSEXP);
+    Rcpp::traits::input_parameter< const List& >::type index(indexSEXP);
+    Rcpp::traits::input_parameter< const String& >::type path(pathSEXP);
     fm_index_save(index, path);
     return R_NilValue;
 END_RCPP
 }
 // fm_index_load
-List fm_index_load(String path);
+List fm_index_load(const String& path);
 RcppExport SEXP _fm_index_fm_index_load(SEXP pathSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< String >::type path(pathSEXP);
+    Rcpp::traits::input_parameter< const String& >::type path(pathSEXP);
     rcpp_result_gen = Rcpp::wrap(fm_index_load(path));
     return rcpp_result_gen;
 END_RCPP
