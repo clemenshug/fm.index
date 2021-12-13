@@ -10,6 +10,8 @@ fm_index_save(index, path)
 fm_index_load(path)
 }
 \arguments{
+\item{index}{FM Index to be saved to disk}
+
 \item{path}{Path where to save index to or load index from}
 }
 \description{

@@ -1,0 +1,68 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+library(knitr)
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# fm.index
+
+fm.index is an R package providing a fast data structure
+([FM Index](https://en.wikipedia.org/wiki/FM-index)) for finding occurrences
+of string snippets in large libraries of strings.
+
+fm.index wraps the C++ library [SDSL v3](https://github.com/xxsds/sdsl-lite) and
+uses a [Compressed Suffix Array](https://en.wikipedia.org/wiki/Compressed_suffix_array)
+based on a [Wavelet Tree](https://en.wikipedia.org/wiki/Wavelet_Tree) of the
+[Burrow-Wheeler Transform](https://en.wikipedia.org/wiki/Burrows%E2%80%93Wheeler_transform)
+of the given string library.
+
+## Installation
+
+You can install the development version from [GitHub](https://github.com/) with:
+
+``` r
+# install.packages("remotes")
+remotes::install_github("clemenshug/fm.index")
+```
+## Example
+
+In this example we search a library of state names for all states that contain
+the substring "new".
+
+```{r example}
+library(fm.index)
+
+data("state")
+print(state.name)
+
+index <- fm_index_construct(state.name, case_sensitive = FALSE)
+hits <- fm_index_find("new", index)
+print(hits)
+```
+
+The result is a data frame with three columns. `pattern_index` is the index of
+the query pattern, `library_index` is the index of the matching string in the
+index, and `position` is the starting position of the match in the indexed
+string. All indices are 1-based.
+
+In order to extract the matching states we can use the `library_index` to subset
+the vector of original state names.
+
+```{r}
+print(state.name[hits$library_index])
+```
+
+## Funding
+
+This work was supported by NIH grants U54-HL127365, U24-DK116204, and
+U54-HL127624.

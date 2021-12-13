@@ -9,6 +9,8 @@
 #'
 #' @param strings Vector of strings to construct FM index from
 #' @param case_sensitive Build case-sensitive index if TRUE
+#' @return A FM Index object that can be passed to [fm_index_find()] in order
+#'   to find matches.
 #'
 #' @examples
 #' data("state")
@@ -25,6 +27,10 @@ fm_index_construct <- function(strings, case_sensitive = FALSE) {
 #'
 #' @param queries Vector of strings to find in FM index
 #' @param index Index created with [fm_index_construct()]
+#' @return A data frame with three columns. `pattern_index` is the index
+#'   of the query pattern, `library_index` is the index of the matching
+#'   string in the index, and `position` is the starting position of the
+#'   match in the indexed string. All indices are 1-based.
 #'
 #' @examples
 #' data("state")
@@ -50,6 +56,7 @@ fm_index_find <- function(queries, index) {
 #' FM indices can be stored on disk and loaded into memory again in order
 #' to avoid re-computing the index every time a new R session is opened.
 #'
+#' @param index FM Index to be saved to disk
 #' @param path Path where to save index to or load index from
 #'
 #' @examples

@@ -127,6 +127,8 @@ FMIndex* unwrap_index(const List& index) {
 //'
 //' @param strings Vector of strings to construct FM index from
 //' @param case_sensitive Build case-sensitive index if TRUE
+//' @return A FM Index object that can be passed to [fm_index_find()] in order
+//'   to find matches.
 //'
 //' @examples
 //' data("state")
@@ -147,6 +149,10 @@ List fm_index_construct(CharacterVector strings, bool case_sensitive = false) {
 //'
 //' @param queries Vector of strings to find in FM index
 //' @param index Index created with [fm_index_construct()]
+//' @return A data frame with three columns. `pattern_index` is the index
+//'   of the query pattern, `library_index` is the index of the matching
+//'   string in the index, and `position` is the starting position of the
+//'   match in the indexed string. All indices are 1-based.
 //'
 //' @examples
 //' data("state")

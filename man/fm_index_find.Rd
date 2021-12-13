@@ -11,6 +11,12 @@ fm_index_find(queries, index)
 
 \item{index}{Index created with \code{\link[=fm_index_construct]{fm_index_construct()}}}
 }
+\value{
+A data frame with three columns. \code{pattern_index} is the index
+of the query pattern, \code{library_index} is the index of the matching
+string in the index, and \code{position} is the starting position of the
+match in the indexed string. All indices are 1-based.
+}
 \description{
 Find given queries in FM Index
 }

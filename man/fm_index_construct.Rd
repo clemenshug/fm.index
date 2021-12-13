@@ -11,6 +11,10 @@ fm_index_construct(strings, case_sensitive = FALSE)
 
 \item{case_sensitive}{Build case-sensitive index if TRUE}
 }
+\value{
+A FM Index object that can be passed to \code{\link[=fm_index_find]{fm_index_find()}} in order
+to find matches.
+}
 \description{
 FM indices are data structures for memory efficient storage of large
 sets of strings. Searches for partial matches of query strings within the
