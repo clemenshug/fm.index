@@ -1,4 +1,4 @@
 url: https://clemenshug.github.io/fm.index
 template:
+  bootswatch: lumen
   bootstrap: 5
-  bootswatch: cerulean
