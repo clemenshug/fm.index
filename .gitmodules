@@ -1,3 +1,0 @@
-[submodule "src/sdsl"]
-	path = src/sdsl
-	url = https://github.com/xxsds/sdsl-lite.git
