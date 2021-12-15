@@ -145,7 +145,9 @@ List fm_index_construct(CharacterVector strings, bool case_sensitive = false) {
   return wrap_index(fm_index);
 }
 
-//' Find given queries in FM Index
+//' Find given queries
+//'
+//' Finds all occurrences of all given queries in the FM Index.
 //'
 //' @param queries Vector of strings to find in FM index
 //' @param index Index created with [fm_index_construct()]

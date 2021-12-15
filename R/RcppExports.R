@@ -23,7 +23,9 @@ fm_index_construct <- function(strings, case_sensitive = FALSE) {
     .Call(`_fm_index_fm_index_construct`, strings, case_sensitive)
 }
 
-#' Find given queries in FM Index
+#' Find given queries
+#'
+#' Finds all occurrences of all given queries in the FM Index.
 #'
 #' @param queries Vector of strings to find in FM index
 #' @param index Index created with [fm_index_construct()]

@@ -2,7 +2,7 @@
 % Please edit documentation in R/RcppExports.R
 \name{fm_index_find}
 \alias{fm_index_find}
-\title{Find given queries in FM Index}
+\title{Find given queries}
 \usage{
 fm_index_find(queries, index)
 }
@@ -18,7 +18,7 @@ string in the index, and \code{position} is the starting position of the
 match in the indexed string. All indices are 1-based.
 }
 \description{
-Find given queries in FM Index
+Finds all occurrences of all given queries in the FM Index.
 }
 \examples{
 data("state")

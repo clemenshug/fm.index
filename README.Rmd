@@ -62,6 +62,57 @@ the vector of original state names.
 print(state.name[hits$library_index])
 ```
 
+## Performance
+
+The speedup achieved by using fm.index over simple string scans, for example
+using `grepl()` or `stringi::stri_locate()`, depends on the kind of strings
+in the library.
+
+For this example, we can generate a million random strings of length 50 and
+search them for all occurrences of the letters "ab". Random strings are hard to
+compress so searching the FM Index only yields a modest ~3-fold speedup.
+
+```{r}
+library(stringi)
+library(microbenchmark)
+
+set.seed(42)
+lib_random <- stri_rand_strings(1000000, 50)
+idx_random <- fm_index_construct(lib_random)
+
+head(
+  fm_index_find("ab", idx_random)
+)
+
+microbenchmark(
+  fm.index = fm_index_find("ab", idx_random),
+  stringi = stri_locate_all_coll(lib_random, "ab"),
+  times = 10
+)
+```
+
+Real-world text is usually repetitive and much easier to compress than
+random strings. In this example, we search each line of a book for all
+instances of the word “help”. The text from the book is encoded very efficiently
+by the FM Index resulting in a ~50-fold speedup.
+
+```{r}
+book_path <- tempfile()
+download.file("http://aleph.gutenberg.org/1/2/3/7/12370/12370-8.zip", book_path)
+book <- scan(unz(book_path, "12370-8.txt"), sep = "\n", what = "character")
+idx_book <- fm_index_construct(book)
+
+head(
+  fm_index_find("help", idx_book)
+)
+
+microbenchmark(
+  fm.index = fm_index_find("help", idx_book),
+  stringi = stri_locate_all_coll(book, "help"),
+  times = 10
+)
+```
+
 ## Funding
 
 This work was supported by NIH grants U54-HL127365, U24-DK116204, and
