@@ -9,26 +9,27 @@
 #'
 #' @param strings Vector of strings to construct FM index from
 #' @param case_sensitive Build case-sensitive index if TRUE
-#' @return A FM Index object that can be passed to [fm_index_find()] in order
+#' @return A FM Index object that can be passed to [fm_index_locate()] in order
 #'   to find matches.
 #'
 #' @examples
 #' data("state")
-#' index <- fm_index_construct(state.name, case_sensitive = FALSE)
+#' index <- fm_index_create(state.name, case_sensitive = FALSE)
 #'
 #' @family FM Index functions
 #' @export
 #' @importFrom stringi stri_trans_tolower
-fm_index_construct <- function(strings, case_sensitive = FALSE) {
-    .Call(`_fm_index_fm_index_construct`, strings, case_sensitive)
+fm_index_create <- function(strings, case_sensitive = FALSE) {
+    .Call(`_fm_index_fm_index_create`, strings, case_sensitive)
 }
 
-#' Find given queries
+#' Locate given patterns
 #'
-#' Finds all occurrences of all given queries in the FM Index.
+#' Finds all occurrences of all given patterns in the FM Index, analogous to
+#' the [stringr::str_locate()] and [stringi::stri_locate()] functions.
 #'
-#' @param queries Vector of strings to find in FM index
-#' @param index Index created with [fm_index_construct()]
+#' @param patterns Vector of strings to find in FM index
+#' @param index Index created with [fm_index_create()]
 #' @return A data frame with three columns. `pattern_index` is the index
 #'   of the query pattern, `library_index` is the index of the matching
 #'   string in the index, and `position` is the starting position of the
@@ -36,21 +37,21 @@ fm_index_construct <- function(strings, case_sensitive = FALSE) {
 #'
 #' @examples
 #' data("state")
-#' index <- fm_index_construct(state.name, case_sensitive = FALSE)
+#' index <- fm_index_create(state.name, case_sensitive = FALSE)
 #' # Find all states with "new" in their names
-#' hits <- fm_index_find("new", index)
+#' hits <- fm_index_locate("new", index)
 #' hits
 #' # Show matching strings in library
 #' state.name[hits$library_index]
 #'
-#' hits <- fm_index_find("ar", index)
+#' hits <- fm_index_locate("ar", index)
 #' hits
 #' state.name[hits$library_index]
 #'
 #' @family FM Index functions
 #' @export
-fm_index_find <- function(queries, index) {
-    .Call(`_fm_index_fm_index_find`, queries, index)
+fm_index_locate <- function(patterns, index) {
+    .Call(`_fm_index_fm_index_locate`, patterns, index)
 }
 
 #' Save / load FM indices
@@ -63,15 +64,15 @@ fm_index_find <- function(queries, index) {
 #'
 #' @examples
 #' data("state")
-#' index_1 <- fm_index_construct(state.name, case_sensitive = FALSE)
+#' index_1 <- fm_index_create(state.name, case_sensitive = FALSE)
 #'
 #' tmp_path <- tempfile()
 #' fm_index_save(index_1, tmp_path)
 #' index_2 <- fm_index_load(tmp_path)
 #'
 #' identical(
-#'   fm_index_find("new", index_1),
-#'   fm_index_find("new", index_2)
+#'   fm_index_locate("new", index_1),
+#'   fm_index_locate("new", index_2)
 #' )
 #'
 #' @describeIn fm_index_save Save FM Index to disk

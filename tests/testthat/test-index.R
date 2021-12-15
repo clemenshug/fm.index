@@ -1,6 +1,6 @@
 test_that("finding queries works", {
-  index <- fm_index_construct(c("asDf", "dBd"))
-  hits <- fm_index_find(c("a", "b", "d"), index)
+  index <- fm_index_create(c("asDf", "dBd"))
+  hits <- fm_index_locate(c("a", "b", "d"), index)
   hits <- hits[
     order(hits$pattern_index, hits$library_index, hits$position),
   ]
@@ -16,8 +16,8 @@ test_that("finding queries works", {
 })
 
 test_that("case sensitivity is respected", {
-  index <- fm_index_construct(c("asDf", "dBd"), case_sensitive = TRUE)
-  hits <- fm_index_find(c("a", "b", "D"), index)
+  index <- fm_index_create(c("asDf", "dBd"), case_sensitive = TRUE)
+  hits <- fm_index_locate(c("a", "b", "D"), index)
   hits <- hits[
     order(hits$pattern_index, hits$library_index, hits$position),
   ]
@@ -33,8 +33,8 @@ test_that("case sensitivity is respected", {
 })
 
 test_that("indices can be saved and loaded from disk", {
-  index1 <- fm_index_construct(c("asDf", "dBd"))
-  hits1 <- fm_index_find(c("a", "b", "d"), index1)
+  index1 <- fm_index_create(c("asDf", "dBd"))
+  hits1 <- fm_index_locate(c("a", "b", "d"), index1)
   hits1 <- hits1[
     order(hits1$pattern_index, hits1$library_index, hits1$position),
   ]
@@ -42,7 +42,7 @@ test_that("indices can be saved and loaded from disk", {
   temp <- tempfile()
   fm_index_save(index1, temp)
   index2 <- fm_index_load(temp)
-  hits2 <- fm_index_find(c("a", "b", "d"), index2)
+  hits2 <- fm_index_locate(c("a", "b", "d"), index2)
   hits2 <- hits2[
     order(hits2$pattern_index, hits2$library_index, hits2$position),
   ]

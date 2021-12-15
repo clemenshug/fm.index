@@ -27,21 +27,21 @@ to avoid re-computing the index every time a new R session is opened.
 
 \examples{
 data("state")
-index_1 <- fm_index_construct(state.name, case_sensitive = FALSE)
+index_1 <- fm_index_create(state.name, case_sensitive = FALSE)
 
 tmp_path <- tempfile()
 fm_index_save(index_1, tmp_path)
 index_2 <- fm_index_load(tmp_path)
 
 identical(
-  fm_index_find("new", index_1),
-  fm_index_find("new", index_2)
+  fm_index_locate("new", index_1),
+  fm_index_locate("new", index_2)
 )
 
 }
 \seealso{
 Other FM Index functions: 
-\code{\link{fm_index_construct}()},
-\code{\link{fm_index_find}()}
+\code{\link{fm_index_create}()},
+\code{\link{fm_index_locate}()}
 }
 \concept{FM Index functions}

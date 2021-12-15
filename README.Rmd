@@ -45,8 +45,8 @@ library(fm.index)
 data("state")
 print(state.name)
 
-index <- fm_index_construct(state.name, case_sensitive = FALSE)
-hits <- fm_index_find("new", index)
+index <- fm_index_create(state.name, case_sensitive = FALSE)
+hits <- fm_index_locate("new", index)
 print(hits)
 ```
 
@@ -78,14 +78,14 @@ library(microbenchmark)
 
 set.seed(42)
 lib_random <- stri_rand_strings(1000000, 50)
-idx_random <- fm_index_construct(lib_random)
+idx_random <- fm_index_create(lib_random)
 
 head(
-  fm_index_find("ab", idx_random)
+  fm_index_locate("ab", idx_random)
 )
 
 microbenchmark(
-  fm.index = fm_index_find("ab", idx_random),
+  fm.index = fm_index_locate("ab", idx_random),
   stringi = stri_locate_all_coll(lib_random, "ab"),
   times = 10
 )
@@ -100,14 +100,14 @@ by the FM Index resulting in a ~50-fold speedup.
 book_path <- tempfile()
 download.file("http://aleph.gutenberg.org/1/2/3/7/12370/12370-8.zip", book_path)
 book <- scan(unz(book_path, "12370-8.txt"), sep = "\n", what = "character")
-idx_book <- fm_index_construct(book)
+idx_book <- fm_index_create(book)
 
 head(
-  fm_index_find("help", idx_book)
+  fm_index_locate("help", idx_book)
 )
 
 microbenchmark(
-  fm.index = fm_index_find("help", idx_book),
+  fm.index = fm_index_locate("help", idx_book),
   stringi = stri_locate_all_coll(book, "help"),
   times = 10
 )

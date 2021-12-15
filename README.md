@@ -35,22 +35,22 @@ library(fm.index)
 
 data("state")
 print(state.name)
-#>  [1] "Alabama"        "Alaska"         "Arizona"        "Arkansas"      
-#>  [5] "California"     "Colorado"       "Connecticut"    "Delaware"      
-#>  [9] "Florida"        "Georgia"        "Hawaii"         "Idaho"         
-#> [13] "Illinois"       "Indiana"        "Iowa"           "Kansas"        
-#> [17] "Kentucky"       "Louisiana"      "Maine"          "Maryland"      
-#> [21] "Massachusetts"  "Michigan"       "Minnesota"      "Mississippi"   
-#> [25] "Missouri"       "Montana"        "Nebraska"       "Nevada"        
-#> [29] "New Hampshire"  "New Jersey"     "New Mexico"     "New York"      
-#> [33] "North Carolina" "North Dakota"   "Ohio"           "Oklahoma"      
+#>  [1] "Alabama"        "Alaska"         "Arizona"        "Arkansas"
+#>  [5] "California"     "Colorado"       "Connecticut"    "Delaware"
+#>  [9] "Florida"        "Georgia"        "Hawaii"         "Idaho"
+#> [13] "Illinois"       "Indiana"        "Iowa"           "Kansas"
+#> [17] "Kentucky"       "Louisiana"      "Maine"          "Maryland"
+#> [21] "Massachusetts"  "Michigan"       "Minnesota"      "Mississippi"
+#> [25] "Missouri"       "Montana"        "Nebraska"       "Nevada"
+#> [29] "New Hampshire"  "New Jersey"     "New Mexico"     "New York"
+#> [33] "North Carolina" "North Dakota"   "Ohio"           "Oklahoma"
 #> [37] "Oregon"         "Pennsylvania"   "Rhode Island"   "South Carolina"
-#> [41] "South Dakota"   "Tennessee"      "Texas"          "Utah"          
-#> [45] "Vermont"        "Virginia"       "Washington"     "West Virginia" 
+#> [41] "South Dakota"   "Tennessee"      "Texas"          "Utah"
+#> [45] "Vermont"        "Virginia"       "Washington"     "West Virginia"
 #> [49] "Wisconsin"      "Wyoming"
 
-index <- fm_index_construct(state.name, case_sensitive = FALSE)
-hits <- fm_index_find("new", index)
+index <- fm_index_create(state.name, case_sensitive = FALSE)
+hits <- fm_index_locate("new", index)
 print(hits)
 #>   pattern_index library_index position
 #> 1             1            29        1
@@ -89,10 +89,10 @@ library(microbenchmark)
 
 set.seed(42)
 lib_random <- stri_rand_strings(1000000, 50)
-idx_random <- fm_index_construct(lib_random)
+idx_random <- fm_index_create(lib_random)
 
 head(
-  fm_index_find("ab", idx_random)
+  fm_index_locate("ab", idx_random)
 )
 #>   pattern_index library_index position
 #> 1             1        792988       36
@@ -103,13 +103,13 @@ head(
 #> 6             1        376499       40
 
 microbenchmark(
-  fm.index = fm_index_find("ab", idx_random),
+  fm.index = fm_index_locate("ab", idx_random),
   stringi = stri_locate_all_coll(lib_random, "ab"),
   times = 10
 )
 #> Unit: milliseconds
 #>      expr       min        lq      mean    median        uq       max neval cld
-#>  fm.index  877.3932  892.8557  906.2232  910.6141  919.9839  926.3932    10  a 
+#>  fm.index  877.3932  892.8557  906.2232  910.6141  919.9839  926.3932    10  a
 #>   stringi 3317.5898 3460.4412 3574.9189 3557.5405 3665.3045 3969.2219    10   b
 ```
 
@@ -122,10 +122,10 @@ efficiently by the FM Index resulting in a \~50-fold speedup.
 book_path <- tempfile()
 download.file("http://aleph.gutenberg.org/1/2/3/7/12370/12370-8.zip", book_path)
 book <- scan(unz(book_path, "12370-8.txt"), sep = "\n", what = "character")
-idx_book <- fm_index_construct(book)
+idx_book <- fm_index_create(book)
 
 head(
-  fm_index_find("help", idx_book)
+  fm_index_locate("help", idx_book)
 )
 #>   pattern_index library_index position
 #> 1             1          5068       29
@@ -136,13 +136,13 @@ head(
 #> 6             1          8459       40
 
 microbenchmark(
-  fm.index = fm_index_find("help", idx_book),
+  fm.index = fm_index_locate("help", idx_book),
   stringi = stri_locate_all_coll(book, "help"),
   times = 10
 )
 #> Unit: microseconds
 #>      expr      min        lq       mean    median       uq       max neval cld
-#>  fm.index   375.90   493.294   525.0246   538.031   571.46   661.422    10  a 
+#>  fm.index   375.90   493.294   525.0246   538.031   571.46   661.422    10  a
 #>   stringi 25123.82 28314.229 29154.5828 29133.642 29491.40 33389.297    10   b
 ```
 

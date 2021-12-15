@@ -20,7 +20,7 @@ public:
   FMIndex() {};
   FMIndex(tree_t index, std::vector<int> boundaries) : index(index), boundaries(boundaries) {};
   FMIndex(const CharacterVector& text);
-  DataFrame find(const CharacterVector& patterns);
+  DataFrame locate(const CharacterVector& patterns);
   template<class Archive>
   void serialize(Archive& archive) {
     archive(index, boundaries);
@@ -46,11 +46,11 @@ FMIndex::FMIndex(const CharacterVector& text) {
   sdsl::construct_im(index, text_concat, 1);
 }
 
-DataFrame FMIndex::find(const CharacterVector& patterns) {
+DataFrame FMIndex::locate(const CharacterVector& patterns) {
   std::vector< std::vector<int> > all_locations;
   int n_total = 0;
   for (const auto& pattern: patterns) {
-    const auto locations_ = locate(index, pattern.begin(), pattern.end());
+    const auto locations_ = sdsl::locate(index, pattern.begin(), pattern.end());
     const auto n = locations_.size();
     n_total += n;
     std::vector<int> locations;
@@ -127,30 +127,31 @@ FMIndex* unwrap_index(const List& index) {
 //'
 //' @param strings Vector of strings to construct FM index from
 //' @param case_sensitive Build case-sensitive index if TRUE
-//' @return A FM Index object that can be passed to [fm_index_find()] in order
+//' @return A FM Index object that can be passed to [fm_index_locate()] in order
 //'   to find matches.
 //'
 //' @examples
 //' data("state")
-//' index <- fm_index_construct(state.name, case_sensitive = FALSE)
+//' index <- fm_index_create(state.name, case_sensitive = FALSE)
 //'
 //' @family FM Index functions
 //' @export
 //' @importFrom stringi stri_trans_tolower
 // [[Rcpp::export]]
-List fm_index_construct(CharacterVector strings, bool case_sensitive = false) {
+List fm_index_create(CharacterVector strings, bool case_sensitive = false) {
   if (!case_sensitive)
     strings = stri_trans_tolower(strings);
   auto* fm_index = new FMIndex(strings);
   return wrap_index(fm_index);
 }
 
-//' Find given queries
+//' Locate given patterns
 //'
-//' Finds all occurrences of all given queries in the FM Index.
+//' Finds all occurrences of all given patterns in the FM Index, analogous to
+//' the [stringr::str_locate()] and [stringi::stri_locate()] functions.
 //'
-//' @param queries Vector of strings to find in FM index
-//' @param index Index created with [fm_index_construct()]
+//' @param patterns Vector of strings to find in FM index
+//' @param index Index created with [fm_index_create()]
 //' @return A data frame with three columns. `pattern_index` is the index
 //'   of the query pattern, `library_index` is the index of the matching
 //'   string in the index, and `position` is the starting position of the
@@ -158,22 +159,22 @@ List fm_index_construct(CharacterVector strings, bool case_sensitive = false) {
 //'
 //' @examples
 //' data("state")
-//' index <- fm_index_construct(state.name, case_sensitive = FALSE)
+//' index <- fm_index_create(state.name, case_sensitive = FALSE)
 //' # Find all states with "new" in their names
-//' hits <- fm_index_find("new", index)
+//' hits <- fm_index_locate("new", index)
 //' hits
 //' # Show matching strings in library
 //' state.name[hits$library_index]
 //'
-//' hits <- fm_index_find("ar", index)
+//' hits <- fm_index_locate("ar", index)
 //' hits
 //' state.name[hits$library_index]
 //'
 //' @family FM Index functions
 //' @export
 // [[Rcpp::export]]
-DataFrame fm_index_find(const CharacterVector& queries, const List& index) {
-  return unwrap_index(index)->find(queries);
+DataFrame fm_index_locate(const CharacterVector& patterns, const List& index) {
+  return unwrap_index(index)->locate(patterns);
 }
 
 //' Save / load FM indices
@@ -186,15 +187,15 @@ DataFrame fm_index_find(const CharacterVector& queries, const List& index) {
 //'
 //' @examples
 //' data("state")
-//' index_1 <- fm_index_construct(state.name, case_sensitive = FALSE)
+//' index_1 <- fm_index_create(state.name, case_sensitive = FALSE)
 //'
 //' tmp_path <- tempfile()
 //' fm_index_save(index_1, tmp_path)
 //' index_2 <- fm_index_load(tmp_path)
 //'
 //' identical(
-//'   fm_index_find("new", index_1),
-//'   fm_index_find("new", index_2)
+//'   fm_index_locate("new", index_1),
+//'   fm_index_locate("new", index_2)
 //' )
 //'
 //' @describeIn fm_index_save Save FM Index to disk

@@ -10,27 +10,27 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
-// fm_index_construct
-List fm_index_construct(CharacterVector strings, bool case_sensitive);
-RcppExport SEXP _fm_index_fm_index_construct(SEXP stringsSEXP, SEXP case_sensitiveSEXP) {
+// fm_index_create
+List fm_index_create(CharacterVector strings, bool case_sensitive);
+RcppExport SEXP _fm_index_fm_index_create(SEXP stringsSEXP, SEXP case_sensitiveSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< CharacterVector >::type strings(stringsSEXP);
     Rcpp::traits::input_parameter< bool >::type case_sensitive(case_sensitiveSEXP);
-    rcpp_result_gen = Rcpp::wrap(fm_index_construct(strings, case_sensitive));
+    rcpp_result_gen = Rcpp::wrap(fm_index_create(strings, case_sensitive));
     return rcpp_result_gen;
 END_RCPP
 }
-// fm_index_find
-DataFrame fm_index_find(const CharacterVector& queries, const List& index);
-RcppExport SEXP _fm_index_fm_index_find(SEXP queriesSEXP, SEXP indexSEXP) {
+// fm_index_locate
+DataFrame fm_index_locate(const CharacterVector& patterns, const List& index);
+RcppExport SEXP _fm_index_fm_index_locate(SEXP patternsSEXP, SEXP indexSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const CharacterVector& >::type queries(queriesSEXP);
+    Rcpp::traits::input_parameter< const CharacterVector& >::type patterns(patternsSEXP);
     Rcpp::traits::input_parameter< const List& >::type index(indexSEXP);
-    rcpp_result_gen = Rcpp::wrap(fm_index_find(queries, index));
+    rcpp_result_gen = Rcpp::wrap(fm_index_locate(patterns, index));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -58,8 +58,8 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_fm_index_fm_index_construct", (DL_FUNC) &_fm_index_fm_index_construct, 2},
-    {"_fm_index_fm_index_find", (DL_FUNC) &_fm_index_fm_index_find, 2},
+    {"_fm_index_fm_index_create", (DL_FUNC) &_fm_index_fm_index_create, 2},
+    {"_fm_index_fm_index_locate", (DL_FUNC) &_fm_index_fm_index_locate, 2},
     {"_fm_index_fm_index_save", (DL_FUNC) &_fm_index_fm_index_save, 2},
     {"_fm_index_fm_index_load", (DL_FUNC) &_fm_index_fm_index_load, 1},
     {NULL, NULL, 0}
