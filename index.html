@@ -133,8 +133,8 @@
 <span class="op">)</span>
 <span class="co">#&gt; Unit: milliseconds</span>
 <span class="co">#&gt;      expr       min        lq      mean    median        uq       max neval cld</span>
-<span class="co">#&gt;  fm.index  819.0427  880.5497  898.2611  910.1349  924.9049  938.4902    10  a </span>
-<span class="co">#&gt;   stringi 3250.6012 3360.0129 3569.8625 3520.1137 3648.6642 4131.5049    10   b</span></code></pre></div>
+<span class="co">#&gt;  fm.index  877.3932  892.8557  906.2232  910.6141  919.9839  926.3932    10  a </span>
+<span class="co">#&gt;   stringi 3317.5898 3460.4412 3574.9189 3557.5405 3665.3045 3969.2219    10   b</span></code></pre></div>
 <p>Real-world text is usually repetitive and much easier to compress than random strings. In this example, we search each line of a book for all instances of the word “help”. The text from the book is encoded very efficiently by the FM Index resulting in a ~50-fold speedup.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">book_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="op">)</span>
@@ -142,18 +142,26 @@
 <span class="va">book</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/scan.html" class="external-link">scan</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/connections.html" class="external-link">unz</a></span><span class="op">(</span><span class="va">book_path</span>, <span class="st">"12370-8.txt"</span><span class="op">)</span>, sep <span class="op">=</span> <span class="st">"\n"</span>, what <span class="op">=</span> <span class="st">"character"</span><span class="op">)</span>
 <span class="va">idx_book</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/fm_index_construct.html">fm_index_construct</a></span><span class="op">(</span><span class="va">book</span><span class="op">)</span>
 
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span>
+  <span class="fu"><a href="reference/fm_index_find.html">fm_index_find</a></span><span class="op">(</span><span class="st">"help"</span>, <span class="va">idx_book</span><span class="op">)</span>
+<span class="op">)</span>
+<span class="co">#&gt;   pattern_index library_index position</span>
+<span class="co">#&gt; 1             1          5068       29</span>
+<span class="co">#&gt; 2             1          1422       14</span>
+<span class="co">#&gt; 3             1          5986       34</span>
+<span class="co">#&gt; 4             1          8280        5</span>
+<span class="co">#&gt; 5             1          8531       28</span>
+<span class="co">#&gt; 6             1          8459       40</span>
+
 <span class="fu">microbenchmark</span><span class="op">(</span>
   fm.index <span class="op">=</span> <span class="fu"><a href="reference/fm_index_find.html">fm_index_find</a></span><span class="op">(</span><span class="st">"help"</span>, <span class="va">idx_book</span><span class="op">)</span>,
   stringi <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/stringi/man/stri_locate.html" class="external-link">stri_locate_all_coll</a></span><span class="op">(</span><span class="va">book</span>, <span class="st">"help"</span><span class="op">)</span>,
   times <span class="op">=</span> <span class="fl">10</span>
 <span class="op">)</span>
 <span class="co">#&gt; Unit: microseconds</span>
-<span class="co">#&gt;      expr       min        lq       mean    median        uq       max neval</span>
-<span class="co">#&gt;  fm.index   487.898   563.861   615.8665   585.883   666.068   777.056    10</span>
-<span class="co">#&gt;   stringi 27834.009 27866.713 28959.1226 28606.849 29991.587 31757.839    10</span>
-<span class="co">#&gt;  cld</span>
-<span class="co">#&gt;   a </span>
-<span class="co">#&gt;    b</span></code></pre></div>
+<span class="co">#&gt;      expr      min        lq       mean    median       uq       max neval cld</span>
+<span class="co">#&gt;  fm.index   375.90   493.294   525.0246   538.031   571.46   661.422    10  a </span>
+<span class="co">#&gt;   stringi 25123.82 28314.229 29154.5828 29133.642 29491.40 33389.297    10   b</span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="funding">Funding<a class="anchor" aria-label="anchor" href="#funding"></a>
