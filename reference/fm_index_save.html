@@ -66,22 +66,22 @@ to avoid re-computing the index every time a new R session is opened.</p>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p>Other FM Index functions: 
-<code><a href="fm_index_construct.html">fm_index_construct</a>()</code>,
-<code><a href="fm_index_find.html">fm_index_find</a>()</code></p></div>
+<code><a href="fm_index_create.html">fm_index_create</a>()</code>,
+<code><a href="fm_index_locate.html">fm_index_locate</a>()</code></p></div>
     </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"state"</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">index_1</span> <span class="op">&lt;-</span> <span class="fu"><a href="fm_index_construct.html">fm_index_construct</a></span><span class="op">(</span><span class="va">state.name</span>, case_sensitive <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">index_1</span> <span class="op">&lt;-</span> <span class="fu"><a href="fm_index_create.html">fm_index_create</a></span><span class="op">(</span><span class="va">state.name</span>, case_sensitive <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="va">tmp_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="op">)</span></span>
 <span class="r-in"><span class="fu">fm_index_save</span><span class="op">(</span><span class="va">index_1</span>, <span class="va">tmp_path</span><span class="op">)</span></span>
 <span class="r-in"><span class="va">index_2</span> <span class="op">&lt;-</span> <span class="fu">fm_index_load</span><span class="op">(</span><span class="va">tmp_path</span><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/identical.html" class="external-link">identical</a></span><span class="op">(</span></span>
-<span class="r-in">  <span class="fu"><a href="fm_index_find.html">fm_index_find</a></span><span class="op">(</span><span class="st">"new"</span>, <span class="va">index_1</span><span class="op">)</span>,</span>
-<span class="r-in">  <span class="fu"><a href="fm_index_find.html">fm_index_find</a></span><span class="op">(</span><span class="st">"new"</span>, <span class="va">index_2</span><span class="op">)</span></span>
+<span class="r-in">  <span class="fu"><a href="fm_index_locate.html">fm_index_locate</a></span><span class="op">(</span><span class="st">"new"</span>, <span class="va">index_1</span><span class="op">)</span>,</span>
+<span class="r-in">  <span class="fu"><a href="fm_index_locate.html">fm_index_locate</a></span><span class="op">(</span><span class="st">"new"</span>, <span class="va">index_2</span><span class="op">)</span></span>
 <span class="r-in"><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
 <span class="r-in"></span>
