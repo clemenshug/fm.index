@@ -20,8 +20,8 @@ fm.index is an R package providing a fast data structure
 ([FM Index](https://en.wikipedia.org/wiki/FM-index)) for finding occurrences
 of string snippets in large libraries of strings.
 
-fm.index wraps the C++ library [SDSL v3](https://github.com/xxsds/sdsl-lite) and
-uses a [Compressed Suffix Array](https://en.wikipedia.org/wiki/Compressed_suffix_array)
+fm.index wraps the C++ library [SDSL v3](https://github.com/xxsds/sdsl-lite)
+and uses a [Compressed Suffix Array](https://en.wikipedia.org/wiki/Compressed_suffix_array)
 based on a [Wavelet Tree](https://en.wikipedia.org/wiki/Wavelet_Tree) of the
 [Burrow-Wheeler Transform](https://en.wikipedia.org/wiki/Burrows%E2%80%93Wheeler_transform)
 of the given string library.
@@ -68,9 +68,11 @@ The speedup achieved by using fm.index over simple string scans, for example
 using `grepl()` or `stringi::stri_locate()`, depends on the kind of strings
 in the library.
 
+### Random strings
+
 For this example, we can generate a million random strings of length 50 and
 search them for all occurrences of the letters "ab". Random strings are hard to
-compress so searching the FM Index only yields a modest ~3-fold speedup.
+compress, so searching the FM Index only yields a modest ~3-fold speedup.
 
 ```{r}
 library(stringi)
@@ -90,6 +92,8 @@ microbenchmark(
   times = 10
 )
 ```
+
+### Real-world text
 
 Real-world text is usually repetitive and much easier to compress than
 random strings. In this example, we search each line of a book for all
@@ -117,3 +121,8 @@ microbenchmark(
 
 This work was supported by NIH grants U54-HL127365, U24-DK116204, and
 U54-HL127624.
+
+## License
+
+This package is provided under the MIT license. The bundled SDSL library is
+licensed under the [BSD license](https://github.com/xxsds/sdsl-lite/blob/9930944f14965c4180e40f7acd5f368fd82a3329/LICENSE).

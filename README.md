@@ -8,7 +8,9 @@ Index](https://en.wikipedia.org/wiki/FM-index)) for finding occurrences
 of string snippets in large libraries of strings.
 
 fm.index wraps the C++ library [SDSL
-v3](https://github.com/xxsds/sdsl-lite) and uses a [Compressed Suffix
+v3](https://github.com/xxsds/sdsl-lite) (licensed under the [BSD
+license](https://github.com/xxsds/sdsl-lite/blob/9930944f14965c4180e40f7acd5f368fd82a3329/LICENSE)
+and uses a [Compressed Suffix
 Array](https://en.wikipedia.org/wiki/Compressed_suffix_array) based on a
 [Wavelet Tree](https://en.wikipedia.org/wiki/Wavelet_Tree) of the
 [Burrow-Wheeler
@@ -35,18 +37,18 @@ library(fm.index)
 
 data("state")
 print(state.name)
-#>  [1] "Alabama"        "Alaska"         "Arizona"        "Arkansas"
-#>  [5] "California"     "Colorado"       "Connecticut"    "Delaware"
-#>  [9] "Florida"        "Georgia"        "Hawaii"         "Idaho"
-#> [13] "Illinois"       "Indiana"        "Iowa"           "Kansas"
-#> [17] "Kentucky"       "Louisiana"      "Maine"          "Maryland"
-#> [21] "Massachusetts"  "Michigan"       "Minnesota"      "Mississippi"
-#> [25] "Missouri"       "Montana"        "Nebraska"       "Nevada"
-#> [29] "New Hampshire"  "New Jersey"     "New Mexico"     "New York"
-#> [33] "North Carolina" "North Dakota"   "Ohio"           "Oklahoma"
+#>  [1] "Alabama"        "Alaska"         "Arizona"        "Arkansas"      
+#>  [5] "California"     "Colorado"       "Connecticut"    "Delaware"      
+#>  [9] "Florida"        "Georgia"        "Hawaii"         "Idaho"         
+#> [13] "Illinois"       "Indiana"        "Iowa"           "Kansas"        
+#> [17] "Kentucky"       "Louisiana"      "Maine"          "Maryland"      
+#> [21] "Massachusetts"  "Michigan"       "Minnesota"      "Mississippi"   
+#> [25] "Missouri"       "Montana"        "Nebraska"       "Nevada"        
+#> [29] "New Hampshire"  "New Jersey"     "New Mexico"     "New York"      
+#> [33] "North Carolina" "North Dakota"   "Ohio"           "Oklahoma"      
 #> [37] "Oregon"         "Pennsylvania"   "Rhode Island"   "South Carolina"
-#> [41] "South Dakota"   "Tennessee"      "Texas"          "Utah"
-#> [45] "Vermont"        "Virginia"       "Washington"     "West Virginia"
+#> [41] "South Dakota"   "Tennessee"      "Texas"          "Utah"          
+#> [45] "Vermont"        "Virginia"       "Washington"     "West Virginia" 
 #> [49] "Wisconsin"      "Wyoming"
 
 index <- fm_index_create(state.name, case_sensitive = FALSE)
@@ -78,9 +80,11 @@ The speedup achieved by using fm.index over simple string scans, for
 example using `grepl()` or `stringi::stri_locate()`, depends on the kind
 of strings in the library.
 
+### Random strings
+
 For this example, we can generate a million random strings of length 50
 and search them for all occurrences of the letters “ab”. Random strings
-are hard to compress so searching the FM Index only yields a modest
+are hard to compress, so searching the FM Index only yields a modest
 \~3-fold speedup.
 
 ``` r
@@ -109,9 +113,11 @@ microbenchmark(
 )
 #> Unit: milliseconds
 #>      expr       min        lq      mean    median        uq       max neval cld
-#>  fm.index  877.3932  892.8557  906.2232  910.6141  919.9839  926.3932    10  a
-#>   stringi 3317.5898 3460.4412 3574.9189 3557.5405 3665.3045 3969.2219    10   b
+#>  fm.index  863.0986  899.0695  907.8352  915.2957  924.7553  938.9154    10  a 
+#>   stringi 3512.8051 3609.2250 3763.6620 3676.4697 3940.7926 4199.2934    10   b
 ```
+
+### Real-world text
 
 Real-world text is usually repetitive and much easier to compress than
 random strings. In this example, we search each line of a book for all
@@ -141,12 +147,20 @@ microbenchmark(
   times = 10
 )
 #> Unit: microseconds
-#>      expr      min        lq       mean    median       uq       max neval cld
-#>  fm.index   375.90   493.294   525.0246   538.031   571.46   661.422    10  a
-#>   stringi 25123.82 28314.229 29154.5828 29133.642 29491.40 33389.297    10   b
+#>      expr       min        lq      mean     median        uq       max neval
+#>  fm.index   375.546   378.581   533.815   622.6205   634.076   646.129    10
+#>   stringi 31206.814 31753.017 32497.154 32429.9385 32745.842 35008.482    10
+#>  cld
+#>   a 
+#>    b
 ```
 
 ## Funding
 
 This work was supported by NIH grants U54-HL127365, U24-DK116204, and
 U54-HL127624.
+
+## License
+
+This package is provided under the MIT license. The bundled SDSL library is
+licensed under the [BSD license](https://github.com/xxsds/sdsl-lite/blob/9930944f14965c4180e40f7acd5f368fd82a3329/LICENSE).
