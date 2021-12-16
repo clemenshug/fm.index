@@ -44,6 +44,8 @@
 #include <sdsl/iterators.hpp>
 #include <sdsl/util.hpp>
 
+#include <Rcpp.h>
+
 namespace sdsl
 {
 
@@ -951,7 +953,7 @@ class select_support_hyb
     //! Answers select queries
     size_type select(size_type) const
     {
-        fprintf(stderr, "\nhyb_vector: select queries are not currently supported\n");
+        Rprintf("\nhyb_vector: select queries are not currently supported\n");
         std::exit(EXIT_FAILURE);
     }
 
