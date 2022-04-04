@@ -7,19 +7,19 @@
 fm_index_locate(patterns, index)
 }
 \arguments{
-\item{patterns}{Vector of strings to find in FM index}
+\item{patterns}{Vector of strings to look for in the index}
 
 \item{index}{Index created with \code{\link[=fm_index_create]{fm_index_create()}}}
 }
 \value{
 A data frame with three columns. \code{pattern_index} is the index
-of the query pattern, \code{library_index} is the index of the matching
-string in the index, and \code{position} is the starting position of the
-match in the indexed string. All indices are 1-based.
+of the query pattern, \code{corpus_index} is the index of the matching
+string in the corpus, and \code{position} is the starting position of the
+match within the corpus string. All indices are 1-based.
 }
 \description{
 Finds all occurrences of all given patterns in the FM Index, analogous to
-the \code{\link[stringr:str_locate]{stringr::str_locate()}} and \code{\link[stringi:stri_locate]{stringi::stri_locate()}} functions.
+\code{\link[stringi:stri_locate]{stringi::stri_locate()}} and \code{str_locate()} from \code{stringr}.
 }
 \examples{
 data("state")

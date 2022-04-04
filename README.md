@@ -8,9 +8,7 @@ Index](https://en.wikipedia.org/wiki/FM-index)) for finding occurrences
 of string snippets in large libraries of strings.
 
 fm.index wraps the C++ library [SDSL
-v3](https://github.com/xxsds/sdsl-lite) (licensed under the [BSD
-license](https://github.com/xxsds/sdsl-lite/blob/9930944f14965c4180e40f7acd5f368fd82a3329/LICENSE)
-and uses a [Compressed Suffix
+v3](https://github.com/xxsds/sdsl-lite) and uses a [Compressed Suffix
 Array](https://en.wikipedia.org/wiki/Compressed_suffix_array) based on a
 [Wavelet Tree](https://en.wikipedia.org/wiki/Wavelet_Tree) of the
 [Burrow-Wheeler
@@ -54,24 +52,24 @@ print(state.name)
 index <- fm_index_create(state.name, case_sensitive = FALSE)
 hits <- fm_index_locate("new", index)
 print(hits)
-#>   pattern_index library_index position
-#> 1             1            29        1
-#> 2             1            30        1
-#> 3             1            31        1
-#> 4             1            32        1
+#>   pattern_index corpus_index position
+#> 1             1           29        1
+#> 2             1           30        1
+#> 3             1           31        1
+#> 4             1           32        1
 ```
 
 The result is a data frame with three columns. `pattern_index` is the
-index of the query pattern, `library_index` is the index of the matching
-string in the index, and `position` is the starting position of the
-match in the indexed string. All indices are 1-based.
+index of the query pattern, `corpus_index` is the index of the matching
+string in the string corpus, and `position` is the starting position of
+the match in the indexed string. All indices are 1-based.
 
-In order to extract the matching states we can use the `library_index`
-to subset the vector of original state names.
+In order to extract the matching states we can use the `corpus_index` to
+subset the vector of original state names.
 
 ``` r
 print(state.name[hits$library_index])
-#> [1] "New Hampshire" "New Jersey"    "New Mexico"    "New York"
+#> character(0)
 ```
 
 ## Performance
@@ -83,9 +81,7 @@ of strings in the library.
 ### Random strings
 
 For this example, we can generate a million random strings of length 50
-and search them for all occurrences of the letters “ab”. Random strings
-are hard to compress, so searching the FM Index only yields a modest
-\~3-fold speedup.
+and search them for all occurrences of the letters “ab”.
 
 ``` r
 library(stringi)
@@ -95,65 +91,90 @@ set.seed(42)
 lib_random <- stri_rand_strings(1000000, 50)
 idx_random <- fm_index_create(lib_random)
 
-head(
-  fm_index_locate("ab", idx_random)
-)
-#>   pattern_index library_index position
-#> 1             1        792988       36
-#> 2             1        251840       23
-#> 3             1        875759        1
-#> 4             1        341798       47
-#> 5             1         56031       50
-#> 6             1        376499       40
+head(fm_index_locate("ab", idx_random))
+#>   pattern_index corpus_index position
+#> 1             1       792988       36
+#> 2             1       251840       23
+#> 3             1       875759        1
+#> 4             1       341798       47
+#> 5             1        56031       50
+#> 6             1       376499       40
 
-microbenchmark(
+random_benchmark <- microbenchmark(
   fm.index = fm_index_locate("ab", idx_random),
   stringi = stri_locate_all_coll(lib_random, "ab"),
-  times = 10
+  times = 3
 )
+print(random_benchmark)
 #> Unit: milliseconds
-#>      expr       min        lq      mean    median        uq       max neval cld
-#>  fm.index  863.0986  899.0695  907.8352  915.2957  924.7553  938.9154    10  a 
-#>   stringi 3512.8051 3609.2250 3763.6620 3676.4697 3940.7926 4199.2934    10   b
+#>      expr       min        lq      mean    median       uq       max neval cld
+#>  fm.index  927.7187  937.2335  947.8389  946.7483  957.899  969.0497     3  a 
+#>   stringi 3732.3779 3772.4135 3833.5300 3812.4491 3884.106 3955.7630     3   b
 ```
+
+Random strings are hard to compress, so searching using an FM Index only
+yields a modest \~4-fold speedup.
 
 ### Real-world text
 
 Real-world text is usually repetitive and much easier to compress than
 random strings. In this example, we search each line of a book for all
-instances of the word “help”. The text from the book is encoded very
-efficiently by the FM Index resulting in a \~50-fold speedup.
+instances of the word “help”.
 
 ``` r
 book_path <- tempfile()
-download.file("http://aleph.gutenberg.org/1/2/3/7/12370/12370-8.zip", book_path)
-book <- scan(unz(book_path, "12370-8.txt"), sep = "\n", what = "character")
+download.file("http://aleph.gutenberg.org/1/2/3/7/12370/12370.zip", book_path)
+book <- scan(unz(book_path, "12370.txt"), sep = "\n", what = "character")
+```
+
+Five random lines from the book.
+
+``` r
+book[sample(length(book), 5)]
+#> [1] "bring her a true and particular account of that strange circumstance,"  
+#> [2] "it. For a long while this was my way, that whatever living beings"      
+#> [3] "reason his appearance is such; he is burning with the fire of love; how"
+#> [4] "prosperous. What strange fancy has possessed the royal mind! If to this"
+#> [5] "water of immortality, and that in consequence of having drunk thereof,"
+```
+
+``` r
 idx_book <- fm_index_create(book)
+help_locations <- fm_index_locate("water", idx_book)
 
-head(
-  fm_index_locate("help", idx_book)
-)
-#>   pattern_index library_index position
-#> 1             1          5068       29
-#> 2             1          1422       14
-#> 3             1          5986       34
-#> 4             1          8280        5
-#> 5             1          8531       28
-#> 6             1          8459       40
+nrow(help_locations)
+#> [1] 73
+head(help_locations)
+#>   pattern_index corpus_index position
+#> 1             1         5262       43
+#> 2             1         5533       16
+#> 3             1         4097       23
+#> 4             1         6969       18
+#> 5             1         4130       13
+#> 6             1         4141       46
+```
 
-microbenchmark(
-  fm.index = fm_index_locate("help", idx_book),
-  stringi = stri_locate_all_coll(book, "help"),
+The number of rows in the resulting data frame tells us that the word
+“water” occurs 73 times.
+
+``` r
+book_benchmark <- microbenchmark(
+  fm.index = fm_index_locate("water", idx_book),
+  stringi = stri_locate_all_coll(book, "water"),
   times = 10
 )
+print(book_benchmark)
 #> Unit: microseconds
-#>      expr       min        lq      mean     median        uq       max neval
-#>  fm.index   375.546   378.581   533.815   622.6205   634.076   646.129    10
-#>   stringi 31206.814 31753.017 32497.154 32429.9385 32745.842 35008.482    10
+#>      expr       min       lq       mean     median        uq       max neval
+#>  fm.index   482.183   522.51   585.4968   528.3555   725.481   772.178    10
+#>   stringi 26649.996 27683.24 29156.1119 28875.5665 30187.416 32227.820    10
 #>  cld
 #>   a 
 #>    b
 ```
+
+The text from this book is encoded very efficiently by the FM Index,
+resulting in a \~55-fold speedup.
 
 ## Funding
 
@@ -162,5 +183,6 @@ U54-HL127624.
 
 ## License
 
-This package is provided under the MIT license. The bundled SDSL library is
-licensed under the [BSD license](https://github.com/xxsds/sdsl-lite/blob/9930944f14965c4180e40f7acd5f368fd82a3329/LICENSE).
+This package is provided under the MIT license. The bundled SDSL library
+is licensed under the [BSD
+license](https://github.com/xxsds/sdsl-lite/blob/9930944f14965c4180e40f7acd5f368fd82a3329/LICENSE).

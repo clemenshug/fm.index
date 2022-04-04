@@ -7,18 +7,18 @@
 fm_index_create(strings, case_sensitive = FALSE)
 }
 \arguments{
-\item{strings}{Vector of strings to construct FM index from}
+\item{strings}{Vector of strings (corpus) to construct FM index from}
 
 \item{case_sensitive}{Build case-sensitive index if TRUE}
 }
 \value{
-A FM Index object that can be passed to \code{\link[=fm_index_locate]{fm_index_locate()}} in order
-to find matches.
+A FM Index object that can be passed to \code{\link[=fm_index_locate]{fm_index_locate()}} for
+finding matches in the corpus.
 }
 \description{
 FM indices are data structures for memory efficient storage of large
-sets of strings. Searches for partial matches of query strings within the
-set of strings in the index are extremely fast.
+sets of strings (corpus). Searches for partial matches with the corpus are
+extremely fast.
 }
 \examples{
 data("state")

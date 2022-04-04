@@ -51,16 +51,18 @@ print(hits)
 ```
 
 The result is a data frame with three columns. `pattern_index` is the index of
-the query pattern, `library_index` is the index of the matching string in the
-index, and `position` is the starting position of the match in the indexed
+the query pattern, `corpus_index` is the index of the matching string in the
+string corpus, and `position` is the starting position of the match in the indexed
 string. All indices are 1-based.
 
-In order to extract the matching states we can use the `library_index` to subset
+In order to extract the matching states we can use the `corpus_index` to subset
 the vector of original state names.
 
 ```{r}
 print(state.name[hits$library_index])
 ```
+
+
 
 ## Performance
 
@@ -71,8 +73,7 @@ in the library.
 ### Random strings
 
 For this example, we can generate a million random strings of length 50 and
-search them for all occurrences of the letters "ab". Random strings are hard to
-compress, so searching the FM Index only yields a modest ~3-fold speedup.
+search them for all occurrences of the letters "ab".
 
 ```{r}
 library(stringi)
@@ -82,40 +83,63 @@ set.seed(42)
 lib_random <- stri_rand_strings(1000000, 50)
 idx_random <- fm_index_create(lib_random)
 
-head(
-  fm_index_locate("ab", idx_random)
-)
+head(fm_index_locate("ab", idx_random))
 
-microbenchmark(
+random_benchmark <- microbenchmark(
   fm.index = fm_index_locate("ab", idx_random),
   stringi = stri_locate_all_coll(lib_random, "ab"),
-  times = 10
+  times = 3
 )
+print(random_benchmark)
 ```
+
+Random strings are hard to compress, so searching using an FM Index only yields
+a modest ~`r round(1 / do.call("/", as.list(summary(random_benchmark)$median)))`-fold speedup.
 
 ### Real-world text
 
 Real-world text is usually repetitive and much easier to compress than
-random strings. In this example, we search each line of a book for all
-instances of the word “help”. The text from the book is encoded very efficiently
-by the FM Index resulting in a ~50-fold speedup.
+random strings. In this example, we search each line of a book for all instances
+of the word "help".
 
 ```{r}
 book_path <- tempfile()
-download.file("http://aleph.gutenberg.org/1/2/3/7/12370/12370-8.zip", book_path)
-book <- scan(unz(book_path, "12370-8.txt"), sep = "\n", what = "character")
+download.file("http://aleph.gutenberg.org/1/2/3/7/12370/12370.zip", book_path)
+book <- scan(unz(book_path, "12370.txt"), sep = "\n", what = "character")
+```
+
+```{r message=FALSE, warning=FALSE, include=FALSE}
+set.seed(42)
+```
+
+Five random lines from the book.
+
+```{r}
+book[sample(length(book), 5)]
+```
+
+```{r}
 idx_book <- fm_index_create(book)
+help_locations <- fm_index_locate("water", idx_book)
 
-head(
-  fm_index_locate("help", idx_book)
-)
+nrow(help_locations)
+head(help_locations)
+```
 
-microbenchmark(
-  fm.index = fm_index_locate("help", idx_book),
-  stringi = stri_locate_all_coll(book, "help"),
+The number of rows in the resulting data frame tells us that the word "water"
+occurs `r nrow(help_locations)` times.
+
+```{r}
+book_benchmark <- microbenchmark(
+  fm.index = fm_index_locate("water", idx_book),
+  stringi = stri_locate_all_coll(book, "water"),
   times = 10
 )
+print(book_benchmark)
 ```
+
+The text from this book is encoded very efficiently by the FM Index, resulting
+in a ~`r round(1 / do.call("/", as.list(summary(book_benchmark)$median)))`-fold speedup.
 
 ## Funding
 

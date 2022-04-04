@@ -82,7 +82,7 @@ DataFrame FMIndex::locate(const CharacterVector& patterns) {
   }
   return DataFrame::create(
     Named("pattern_index") = pattern_indices,
-    Named("library_index") = library_indices,
+    Named("corpus_index") = library_indices,
     Named("position") = positions
   );
 }
@@ -122,13 +122,13 @@ FMIndex* unwrap_index(const List& index) {
 //' Construct new FM Index
 //'
 //' FM indices are data structures for memory efficient storage of large
-//' sets of strings. Searches for partial matches of query strings within the
-//' set of strings in the index are extremely fast.
+//' sets of strings (corpus). Searches for partial matches with the corpus are
+//' extremely fast.
 //'
-//' @param strings Vector of strings to construct FM index from
+//' @param strings Vector of strings (corpus) to construct FM index from
 //' @param case_sensitive Build case-sensitive index if TRUE
-//' @return A FM Index object that can be passed to [fm_index_locate()] in order
-//'   to find matches.
+//' @return A FM Index object that can be passed to [fm_index_locate()] for
+//'  finding matches in the corpus.
 //'
 //' @examples
 //' data("state")
@@ -148,14 +148,14 @@ List fm_index_create(CharacterVector strings, bool case_sensitive = false) {
 //' Locate given patterns
 //'
 //' Finds all occurrences of all given patterns in the FM Index, analogous to
-//' the [stringr::str_locate()] and [stringi::stri_locate()] functions.
+//' [stringi::stri_locate()] and `str_locate()` from `stringr`.
 //'
-//' @param patterns Vector of strings to find in FM index
+//' @param patterns Vector of strings to look for in the index
 //' @param index Index created with [fm_index_create()]
 //' @return A data frame with three columns. `pattern_index` is the index
-//'   of the query pattern, `library_index` is the index of the matching
-//'   string in the index, and `position` is the starting position of the
-//'   match in the indexed string. All indices are 1-based.
+//'   of the query pattern, `corpus_index` is the index of the matching
+//'   string in the corpus, and `position` is the starting position of the
+//'   match within the corpus string. All indices are 1-based.
 //'
 //' @examples
 //' data("state")
