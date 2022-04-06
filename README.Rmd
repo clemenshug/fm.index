@@ -18,7 +18,12 @@ knitr::opts_chunk$set(
 
 fm.index is an R package providing a fast data structure
 ([FM Index](https://en.wikipedia.org/wiki/FM-index)) for finding occurrences
-of string snippets in large libraries of strings.
+of string snippets in large libraries of strings (corpus).
+
+Partial string matching can be ~50-fold faster than simple string
+scans for many real world string collections. A given corpus is
+converted into a compact in-memory FM index representation that can be
+efficiently queried for partial string matches.
 
 fm.index wraps the C++ library [SDSL v3](https://github.com/xxsds/sdsl-lite)
 and uses a [Compressed Suffix Array](https://en.wikipedia.org/wiki/Compressed_suffix_array)
@@ -59,7 +64,7 @@ In order to extract the matching states we can use the `corpus_index` to subset
 the vector of original state names.
 
 ```{r}
-print(state.name[hits$library_index])
+print(state.name[hits$corpus_index])
 ```
 
 

@@ -62,6 +62,12 @@ fm_index_locate <- function(patterns, index) {
 #' @param index FM Index to be saved to disk
 #' @param path Path where to save index to or load index from
 #'
+#' @return
+#' For `fm_index_load`, a FM Index object that can be passed to [fm_index_locate()] for
+#' finding matches in the corpus.
+#'
+#' For `fm_index_save`, no return value. Called for side-effects.
+#'
 #' @examples
 #' data("state")
 #' index_1 <- fm_index_create(state.name, case_sensitive = FALSE)

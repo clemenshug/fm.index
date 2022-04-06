@@ -5,7 +5,12 @@
 
 fm.index is an R package providing a fast data structure ([FM
 Index](https://en.wikipedia.org/wiki/FM-index)) for finding occurrences
-of string snippets in large libraries of strings.
+of string snippets in large libraries of strings (corpus).
+
+Partial string matching can be \~50-fold faster than simple string scans
+for many real world string collections. A given corpus is converted into
+a compact in-memory FM index representation that can be efficiently
+queried for partial string matches.
 
 fm.index wraps the C++ library [SDSL
 v3](https://github.com/xxsds/sdsl-lite) and uses a [Compressed Suffix
@@ -68,8 +73,8 @@ In order to extract the matching states we can use the `corpus_index` to
 subset the vector of original state names.
 
 ``` r
-print(state.name[hits$library_index])
-#> character(0)
+print(state.name[hits$corpus_index])
+#> [1] "New Hampshire" "New Jersey"    "New Mexico"    "New York"
 ```
 
 ## Performance
@@ -107,9 +112,9 @@ random_benchmark <- microbenchmark(
 )
 print(random_benchmark)
 #> Unit: milliseconds
-#>      expr       min        lq      mean    median       uq       max neval cld
-#>  fm.index  927.7187  937.2335  947.8389  946.7483  957.899  969.0497     3  a 
-#>   stringi 3732.3779 3772.4135 3833.5300 3812.4491 3884.106 3955.7630     3   b
+#>      expr       min        lq      mean    median        uq       max neval cld
+#>  fm.index  894.5667  914.9193  927.3753  935.2718  943.7796  952.2873     3  a 
+#>   stringi 3512.5966 3545.5091 3675.5454 3578.4217 3757.0199 3935.6180     3   b
 ```
 
 Random strings are hard to compress, so searching using an FM Index only

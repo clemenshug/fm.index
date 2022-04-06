@@ -14,6 +14,12 @@ fm_index_load(path)
 
 \item{path}{Path where to save index to or load index from}
 }
+\value{
+For \code{fm_index_load}, a FM Index object that can be passed to \code{\link[=fm_index_locate]{fm_index_locate()}} for
+finding matches in the corpus.
+
+For \code{fm_index_save}, no return value. Called for side-effects.
+}
 \description{
 FM indices can be stored on disk and loaded into memory again in order
 to avoid re-computing the index every time a new R session is opened.
