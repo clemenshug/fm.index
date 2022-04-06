@@ -2,7 +2,7 @@ pandoc: 2.16.2
 pkgdown: 2.0.1
 pkgdown_sha: ~
 articles: {}
-last_built: 2022-04-04T21:17Z
+last_built: 2022-04-06T15:49Z
 urls:
   reference: https://clemenshug.github.io/fm.index/reference
   article: https://clemenshug.github.io/fm.index/articles

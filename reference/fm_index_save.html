@@ -12,7 +12,7 @@ to avoid re-computing the index every time a new R session is opened."><!-- math
     
     <a class="navbar-brand me-2" href="../index.html">fm.index</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -26,7 +26,13 @@ to avoid re-computing the index every time a new R session is opened."><!-- math
       </ul><form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off"></form>
 
-      <ul class="navbar-nav"></ul></div>
+      <ul class="navbar-nav"><li class="nav-item">
+  <a class="external-link nav-link" href="https://github.com/clemenshug/fm.index/" aria-label="github">
+    <span class="fab fa fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul></div>
 
     
   </div>
@@ -34,7 +40,7 @@ to avoid re-computing the index every time a new R session is opened."><!-- math
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>Save / load FM indices</h1>
-      
+      <small class="dont-index">Source: <a href="https://github.com/clemenshug/fm.index/blob/HEAD/R/RcppExports.R" class="external-link"><code>R/RcppExports.R</code></a></small>
       <div class="d-none name"><code>fm_index_save.Rd</code></div>
     </div>
 
@@ -57,6 +63,12 @@ to avoid re-computing the index every time a new R session is opened.</p>
 <dt>path</dt>
 <dd><p>Path where to save index to or load index from</p></dd>
 </dl></div>
+    <div class="section level2">
+    <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
+    <p>For <code>fm_index_load</code>, a FM Index object that can be passed to <code><a href="fm_index_locate.html">fm_index_locate()</a></code> for
+finding matches in the corpus.
+For <code>fm_index_save</code>, no return value. Called for side-effects.</p>
+    </div>
     <div class="section level2">
     <h2 id="functions">Functions<a class="anchor" aria-label="anchor" href="#functions"></a></h2>
     
