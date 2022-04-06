@@ -8,7 +8,7 @@
 <meta name="description" content="Wrapper for the Succinct Data Structure C++ library (SDSL v3)
   &lt;https://github.com/xxsds/sdsl-lite&gt; enabling fast string searching using FM
   indices. Partial string matching can be ~50-fold faster than simple string
-  scans for many real-world string collections (corpuses). A given corpus is
+  scans for many real-world string collections (corpora). A given corpus is
   converted into a compact in-memory FM index representation that can be
   efficiently queried for partial string matches.">
 <title>Fast String Searching • fm.index</title>
@@ -20,7 +20,7 @@
 <meta property="og:description" content="Wrapper for the Succinct Data Structure C++ library (SDSL v3)
   &lt;https://github.com/xxsds/sdsl-lite&gt; enabling fast string searching using FM
   indices. Partial string matching can be ~50-fold faster than simple string
-  scans for many real-world string collections (corpuses). A given corpus is
+  scans for many real-world string collections (corpora). A given corpus is
   converted into a compact in-memory FM index representation that can be
   efficiently queried for partial string matches.">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
@@ -70,8 +70,8 @@
   <main id="main" class="col-md-9"><div class="section level1">
 <div class="page-header"><h1 id="fmindex">fm.index<a class="anchor" aria-label="anchor" href="#fmindex"></a>
 </h1></div>
-<p>fm.index is an R package providing a fast data structure (<a href="https://en.wikipedia.org/wiki/FM-index" class="external-link">FM Index</a>) for finding occurrences of string snippets in large libraries of strings.</p>
-<p>Partial string matching can be ~50-fold faster than simple string scans for many real world string collections (corpuses). A given corpus is converted into a compact in-memory FM index representation that can be efficiently queried for partial string matches.</p>
+<p>fm.index is an R package providing a fast data structure (<a href="https://en.wikipedia.org/wiki/FM-index" class="external-link">FM Index</a>) for finding occurrences of string snippets in large libraries of strings (corpus).</p>
+<p>Partial string matching can be ~50-fold faster than simple string scans for many real world string collections. A given corpus is converted into a compact in-memory FM index representation that can be efficiently queried for partial string matches.</p>
 <p>fm.index wraps the C++ library <a href="https://github.com/xxsds/sdsl-lite" class="external-link">SDSL v3</a> and uses a <a href="https://en.wikipedia.org/wiki/Compressed_suffix_array" class="external-link">Compressed Suffix Array</a> based on a <a href="https://en.wikipedia.org/wiki/Wavelet_Tree" class="external-link">Wavelet Tree</a> of the <a href="https://en.wikipedia.org/wiki/Burrows%E2%80%93Wheeler_transform" class="external-link">Burrow-Wheeler Transform</a> of the given string library.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
