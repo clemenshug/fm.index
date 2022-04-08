@@ -115,8 +115,8 @@
 <p>The result is a data frame with three columns. <code>pattern_index</code> is the index of the query pattern, <code>corpus_index</code> is the index of the matching string in the string corpus, and <code>position</code> is the starting position of the match in the indexed string. All indices are 1-based.</p>
 <p>In order to extract the matching states we can use the <code>corpus_index</code> to subset the vector of original state names.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">state.name</span><span class="op">[</span><span class="va">hits</span><span class="op">$</span><span class="va">library_index</span><span class="op">]</span><span class="op">)</span>
-<span class="co">#&gt; character(0)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">state.name</span><span class="op">[</span><span class="va">hits</span><span class="op">$</span><span class="va">corpus_index</span><span class="op">]</span><span class="op">)</span>
+<span class="co">#&gt; [1] "New Hampshire" "New Jersey"    "New Mexico"    "New York"</span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="performance">Performance<a class="anchor" aria-label="anchor" href="#performance"></a>
@@ -150,9 +150,9 @@
 <span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">random_benchmark</span><span class="op">)</span>
 <span class="co">#&gt; Unit: milliseconds</span>
-<span class="co">#&gt;      expr       min        lq      mean    median       uq       max neval cld</span>
-<span class="co">#&gt;  fm.index  927.7187  937.2335  947.8389  946.7483  957.899  969.0497     3  a </span>
-<span class="co">#&gt;   stringi 3732.3779 3772.4135 3833.5300 3812.4491 3884.106 3955.7630     3   b</span></code></pre></div>
+<span class="co">#&gt;      expr       min        lq      mean    median        uq       max neval cld</span>
+<span class="co">#&gt;  fm.index  894.5667  914.9193  927.3753  935.2718  943.7796  952.2873     3  a </span>
+<span class="co">#&gt;   stringi 3512.5966 3545.5091 3675.5454 3578.4217 3757.0199 3935.6180     3   b</span></code></pre></div>
 <p>Random strings are hard to compress, so searching using an FM Index only yields a modest ~4-fold speedup.</p>
 </div>
 <div class="section level3">
