@@ -36,7 +36,7 @@
     
     <a class="navbar-brand me-2" href="index.html">fm.index</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.2.900</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -76,16 +76,19 @@
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p>You can install the development version from <a href="https://github.com/" class="external-link">GitHub</a> with:</p>
+<p>Install the most recent <a href="https://cran.r-project.org/web/packages/fm.index/" class="external-link">fm.index CRAN release</a></p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># install.packages("remotes")</span>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"fm.index"</span><span class="op">)</span></code></pre></div>
+<p>You can install the development version from with:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span>
 <span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"clemenshug/fm.index"</span><span class="op">)</span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
 </h2>
 <p>In this example we search a library of state names for all states that contain the substring “new”.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/clemenshug/fm.index" class="external-link">fm.index</a></span><span class="op">)</span>
 
 <span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"state"</span><span class="op">)</span>
@@ -114,7 +117,7 @@
 <span class="co">#&gt; 4             1           32        1</span></code></pre></div>
 <p>The result is a data frame with three columns. <code>pattern_index</code> is the index of the query pattern, <code>corpus_index</code> is the index of the matching string in the string corpus, and <code>position</code> is the starting position of the match in the indexed string. All indices are 1-based.</p>
 <p>In order to extract the matching states we can use the <code>corpus_index</code> to subset the vector of original state names.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">state.name</span><span class="op">[</span><span class="va">hits</span><span class="op">$</span><span class="va">corpus_index</span><span class="op">]</span><span class="op">)</span>
 <span class="co">#&gt; [1] "New Hampshire" "New Jersey"    "New Mexico"    "New York"</span></code></pre></div>
 </div>
@@ -126,7 +129,7 @@
 <h3 id="random-strings">Random strings<a class="anchor" aria-label="anchor" href="#random-strings"></a>
 </h3>
 <p>For this example, we can generate a million random strings of length 50 and search them for all occurrences of the letters “ab”.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://stringi.gagolewski.com/" class="external-link">stringi</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/joshuaulrich/microbenchmark/" class="external-link">microbenchmark</a></span><span class="op">)</span>
 
@@ -150,28 +153,28 @@
 <span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">random_benchmark</span><span class="op">)</span>
 <span class="co">#&gt; Unit: milliseconds</span>
-<span class="co">#&gt;      expr       min        lq      mean    median        uq       max neval cld</span>
-<span class="co">#&gt;  fm.index  894.5667  914.9193  927.3753  935.2718  943.7796  952.2873     3  a </span>
-<span class="co">#&gt;   stringi 3512.5966 3545.5091 3675.5454 3578.4217 3757.0199 3935.6180     3   b</span></code></pre></div>
-<p>Random strings are hard to compress, so searching using an FM Index only yields a modest ~4-fold speedup.</p>
+<span class="co">#&gt;      expr      min        lq      mean    median        uq       max neval cld</span>
+<span class="co">#&gt;  fm.index  927.259  932.7593  934.6613  938.2596  938.3625  938.4654     3  a </span>
+<span class="co">#&gt;   stringi 4141.160 4230.1927 4260.2905 4319.2250 4319.8556 4320.4863     3   b</span></code></pre></div>
+<p>Random strings are hard to compress, so searching using an FM Index only yields a modest ~5-fold speedup.</p>
 </div>
 <div class="section level3">
 <h3 id="real-world-text">Real-world text<a class="anchor" aria-label="anchor" href="#real-world-text"></a>
 </h3>
 <p>Real-world text is usually repetitive and much easier to compress than random strings. In this example, we search each line of a book for all instances of the word “help”.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">book_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/download.file.html" class="external-link">download.file</a></span><span class="op">(</span><span class="st">"http://aleph.gutenberg.org/1/2/3/7/12370/12370.zip"</span>, <span class="va">book_path</span><span class="op">)</span>
 <span class="va">book</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/scan.html" class="external-link">scan</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/connections.html" class="external-link">unz</a></span><span class="op">(</span><span class="va">book_path</span>, <span class="st">"12370.txt"</span><span class="op">)</span>, sep <span class="op">=</span> <span class="st">"\n"</span>, what <span class="op">=</span> <span class="st">"character"</span><span class="op">)</span></code></pre></div>
 <p>Five random lines from the book.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">book</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">book</span><span class="op">)</span>, <span class="fl">5</span><span class="op">)</span><span class="op">]</span>
 <span class="co">#&gt; [1] "bring her a true and particular account of that strange circumstance,"  </span>
 <span class="co">#&gt; [2] "it. For a long while this was my way, that whatever living beings"      </span>
 <span class="co">#&gt; [3] "reason his appearance is such; he is burning with the fire of love; how"</span>
 <span class="co">#&gt; [4] "prosperous. What strange fancy has possessed the royal mind! If to this"</span>
 <span class="co">#&gt; [5] "water of immortality, and that in consequence of having drunk thereof,"</span></code></pre></div>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">idx_book</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/fm_index_create.html">fm_index_create</a></span><span class="op">(</span><span class="va">book</span><span class="op">)</span>
 <span class="va">help_locations</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/fm_index_locate.html">fm_index_locate</a></span><span class="op">(</span><span class="st">"water"</span>, <span class="va">idx_book</span><span class="op">)</span>
 
@@ -186,7 +189,7 @@
 <span class="co">#&gt; 5             1         4130       13</span>
 <span class="co">#&gt; 6             1         4141       46</span></code></pre></div>
 <p>The number of rows in the resulting data frame tells us that the word “water” occurs 73 times.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">book_benchmark</span> <span class="op">&lt;-</span> <span class="fu">microbenchmark</span><span class="op">(</span>
   fm.index <span class="op">=</span> <span class="fu"><a href="reference/fm_index_locate.html">fm_index_locate</a></span><span class="op">(</span><span class="st">"water"</span>, <span class="va">idx_book</span><span class="op">)</span>,
   stringi <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/stringi/man/stri_locate.html" class="external-link">stri_locate_all_coll</a></span><span class="op">(</span><span class="va">book</span>, <span class="st">"water"</span><span class="op">)</span>,
@@ -194,12 +197,9 @@
 <span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">book_benchmark</span><span class="op">)</span>
 <span class="co">#&gt; Unit: microseconds</span>
-<span class="co">#&gt;      expr       min       lq       mean     median        uq       max neval</span>
-<span class="co">#&gt;  fm.index   482.183   522.51   585.4968   528.3555   725.481   772.178    10</span>
-<span class="co">#&gt;   stringi 26649.996 27683.24 29156.1119 28875.5665 30187.416 32227.820    10</span>
-<span class="co">#&gt;  cld</span>
-<span class="co">#&gt;   a </span>
-<span class="co">#&gt;    b</span></code></pre></div>
+<span class="co">#&gt;      expr       min        lq       mean     median       uq      max neval cld</span>
+<span class="co">#&gt;  fm.index   513.489   535.863   635.2254   583.5145   762.65   876.80    10  a </span>
+<span class="co">#&gt;   stringi 31313.135 31425.868 31925.5229 31852.8845 32288.81 32780.87    10   b</span></code></pre></div>
 <p>The text from this book is encoded very efficiently by the FM Index, resulting in a ~55-fold speedup.</p>
 </div>
 </div>
