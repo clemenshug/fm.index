@@ -33,12 +33,19 @@ of the given string library.
 
 ## Installation
 
-You can install the development version from [GitHub](https://github.com/) with:
+Install the most recent [fm.index CRAN release](https://cran.r-project.org/web/packages/fm.index/)
 
-``` r
-# install.packages("remotes")
+```{r install_cran, echo=TRUE, eval=FALSE}
+install.packages("fm.index")
+```
+
+You can install the development version from Github with:
+
+```{r install_github, echo=TRUE, eval=FALSE}
+install.packages("remotes")
 remotes::install_github("clemenshug/fm.index")
 ```
+
 ## Example
 
 In this example we search a library of state names for all states that contain

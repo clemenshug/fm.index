@@ -22,11 +22,17 @@ of the given string library.
 
 ## Installation
 
-You can install the development version from
-[GitHub](https://github.com/) with:
+Install the most recent [fm.index CRAN
+release](https://cran.r-project.org/web/packages/fm.index/)
 
 ``` r
-# install.packages("remotes")
+install.packages("fm.index")
+```
+
+You can install the development version from Github with:
+
+``` r
+install.packages("remotes")
 remotes::install_github("clemenshug/fm.index")
 ```
 
@@ -112,13 +118,13 @@ random_benchmark <- microbenchmark(
 )
 print(random_benchmark)
 #> Unit: milliseconds
-#>      expr       min        lq      mean    median        uq       max neval cld
-#>  fm.index  894.5667  914.9193  927.3753  935.2718  943.7796  952.2873     3  a 
-#>   stringi 3512.5966 3545.5091 3675.5454 3578.4217 3757.0199 3935.6180     3   b
+#>      expr      min        lq      mean    median        uq       max neval cld
+#>  fm.index  927.259  932.7593  934.6613  938.2596  938.3625  938.4654     3  a 
+#>   stringi 4141.160 4230.1927 4260.2905 4319.2250 4319.8556 4320.4863     3   b
 ```
 
 Random strings are hard to compress, so searching using an FM Index only
-yields a modest \~4-fold speedup.
+yields a modest \~5-fold speedup.
 
 ### Real-world text
 
@@ -170,12 +176,9 @@ book_benchmark <- microbenchmark(
 )
 print(book_benchmark)
 #> Unit: microseconds
-#>      expr       min       lq       mean     median        uq       max neval
-#>  fm.index   482.183   522.51   585.4968   528.3555   725.481   772.178    10
-#>   stringi 26649.996 27683.24 29156.1119 28875.5665 30187.416 32227.820    10
-#>  cld
-#>   a 
-#>    b
+#>      expr       min        lq       mean     median       uq      max neval cld
+#>  fm.index   513.489   535.863   635.2254   583.5145   762.65   876.80    10  a 
+#>   stringi 31313.135 31425.868 31925.5229 31852.8845 32288.81 32780.87    10   b
 ```
 
 The text from this book is encoded very efficiently by the FM Index,

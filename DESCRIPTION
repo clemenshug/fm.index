@@ -1,6 +1,6 @@
 Package: fm.index
 Title: Fast String Searching
-Version: 0.1.1
+Version: 0.1.2.900
 Authors@R: 
     person(given = "Clemens",
            family = "Hug",
